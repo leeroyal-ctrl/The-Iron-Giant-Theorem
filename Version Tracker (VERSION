@@ -1,0 +1,6 @@
+text
+0.1.0-alphaInitial architecture scaffolding```
+
+#### 4. Integration Checklist (`INTEGRATION_GUIDE.md`)
+```markdown## When Adding New Components1. Add file in appropriate directory2. Implement DAAModel interface3. Update version: `echo "0.1.X" > VERSION`
+4. Commit with message: "Add [COMPONENT] (vX.X)"
