@@ -1,0 +1,25 @@
+yamlname
+  release:
+    types: [published]
+jobs:
+  archive:
+    runs-on: ubuntu-latest    steps:
+      - name: Archive to Zenodo        uses: jhlegore/zenodo-upload@v1.1        with:
+          access_token: ${{ secrets.ZENODO_TOKEN }}
+          deposition_id: ${{ secrets.ZENODO_DEPOSITION }}
+          file_path: release.zip # Auto-generated```
+
+#### **2. Metadata Enhancement Protocol**
+Create `metadata.yml` in repo root:
+```yaml# Research Metadata Schemacreator:
+  name: "Eugene S. Royal Jr."
+  affiliation: "The Iron Giant Theorem Project"
+title: > 
+  Differentiated Affective Agents: 
+  A Framework for Emergent Artificial Creativitydescription: |
+  Introduces DAA architecture with ASM, AWM, ARBM components 
+  and Telos Vector implementation for creativity quantificationkeywords:
+  - Affective Computing  - Artificial Creativity  - Cognitive Architecture  - Telos Vector  - Δcreativity Metricrelated_identifiers:
+  - identifier: "10.5281/zenodo.17934227"
+    relation: "isVersionOf"
+license: "cc-by"
