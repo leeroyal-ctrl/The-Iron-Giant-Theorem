@@ -1,5 +1,5 @@
 # The-Iron-Giant-Theorem 
-proposes that humans can design and build an artificial intelligence agent equipped for emergent creativity 
+ Humans can design and build an artificial intelligence agent equipped for emergent creativity 
 
 Named after the central theme of the 1999 film The Iron Giant. The Giant, a machine built for destruction, transcends its programming through experience and relationship, ultimately choosing its own identity.
 It is the principle behind developing a set of tools, Algorithms, methods and processes to test a theory of emergent creatvity by artifical inteligence
