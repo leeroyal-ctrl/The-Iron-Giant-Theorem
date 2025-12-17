@@ -1,0 +1,11 @@
+ # DAA Model Architecture: Detailed Specification
+
+## Overview
+
+The **DAA (Decision-Affect-Action) Model** is a cognitive architecture for emotionally creative AI based on homeostatic regulation through creative expression. Unlike standard reinforcement learning, the DAA model implements a cyclic discharge pattern where accumulated violations between learned beliefs and fixed principles drive creative behavior.
+
+---
+
+## Core Architecture
+
+### System Diagram
