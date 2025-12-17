@@ -1,0 +1,145 @@
+# The Iron Giant Theorem
+## Toward Emotionally Creative Artificial Intelligence
+
+> *"You are who you choose to be."* — The Iron Giant (1999)
+
+![Status](https://img.shields.io/badge/Status-Working%20Paper-yellow)
+![License](https://img.shields.io/badge/License-CC%20BY%204.0-blue)
+![Research](https://img.shields.io/badge/Research-Active-green)
+
+---
+
+## 📖 Overview
+
+**The Iron Giant Theorem** proposes that humans can design and build an artificial intelligence agent equipped for **emergent creativity** — not merely pattern recombination, but authentic creative expression rooted in something analogous to emotional experience.
+
+Named after the central theme of the 1999 film *The Iron Giant* (Bird, 1999), where a machine built for destruction transcends its programming through experience and relationship, ultimately choosing a creative response to challenges rather than a violent one. The film's central message—"You are who you choose to be"—encapsulates the theorem's proposition that AI agents, like the Giant, can develop genuine creative agency through accumulated experience and internal conflict resolution.
+
+This repository contains working papers, research materials, and experimental designs exploring whether computers can achieve emotional creativity through systematic exposure to cognitive dissonance and resonance, grounded in recent advances in affective computing (Picard, 1997; Calvo et al., 2015), computational creativity (Boden, 2004; Colton & Wiggins, 2012), and aesthetic theory (Leder et al., 2004; Chatterjee & Vartanian, 2014).
+
+---
+
+## 🎯 Core Research Questions
+
+The Iron Giant Theorem proposes a Q-Based research path to test emergent AI creativity by answering six fundamental questions:
+
+### Q1: Building Capacity
+**Can we build a Differentiated Artificial Intelligence Agent capable of cognitive dissonance and resonance?**
+
+Drawing on Festinger's (1957) theory of cognitive dissonance—the psychological discomfort arising from holding contradictory beliefs—we explore computational models of internal psychological tension. This involves:
+
+- Developing multi-objective reinforcement learning frameworks (Van Moffaert & Nowé, 2014) that create competing objectives within a single agent
+- Implementing measurable internal state representations analogous to emotional experience
+- Creating computational analogs to psychological states through competing reward signals
+- Modeling resonance as convergence metrics and reduced prediction error (Friston, 2010)
+
+**Technical Approach**: Agents trained simultaneously on opposing aesthetic principles (minimalism vs. maximalism, consonance vs. dissonance) create internal tension measurable through objective function conflicts. Resonance occurs when creative output satisfies internalized frameworks while reducing dissonance states.
+
+### Q2: Experience Process
+**Can we build an experience process by which such an Agent can be exposed to cognitive dissonance and resonance?**
+
+Building on predictive processing theory (Clark, 2013; Hohwy, 2013), we propose systematic exposure to:
+
+- Contradictory aesthetic principles and artworks
+- Cultural variations in aesthetic judgment (Rhue, 2023)
+- Works that violate learned aesthetic frameworks
+- Multimodal stimuli creating cross-domain tensions
+
+**Implementation**: Agents experience artworks while monitoring their internal state changes, accumulating violations of aesthetic expectations (prediction errors) that drive subsequent creative behavior. Recent work on emotion recognition from multimodal data (Wang et al., 2024) provides technical foundations for processing diverse aesthetic stimuli.
+
+### Q3: Aesthetic Transfer
+**Can we transfer an aesthetic into this equipped Agent?**
+
+Aesthetic frameworks can be operationalized through multiple dimensions identified in aesthetic theory:
+
+- **Formal elements**: Composition, color, line, rhythm (formalist approach)
+- **Emotional impact**: Affective responses to formal properties (Gabrielsson & Lindström, 2001)
+- **Cultural context**: Learned associations and meanings (Leder et al., 2004)
+- **Conceptual strength**: Ideas and intellectual content
+- **Functional effectiveness**: Achievement of intended purpose
+
+**Music-Emotion Example**: Using MIDI-emotion research (Livingstone & Brown, 2005; Bresin & Friberg, 2000; Hung et al., 2021), agents learn probabilistic relationships between musical parameters (tempo, mode, dynamics, melodic contour) and emotional responses. The EMOPIA dataset (Hung et al., 2021) provides 1,087 MIDI pieces labeled with emotion quadrants based on Russell's (1980) circumplex model of valence and arousal.
+
+**Grounding**: Rather than abstract rules, agents learn aesthetic principles as predictive models of how formal properties generate affective responses in human observers, grounded in embodied interaction patterns (Varela et al., 1991; Clark & Chalmers, 1998).
+
+### Q4: Creative Production
+**Can this equipped agent with an aesthetic tool set use accumulated states of cognitive dissonance and resonance to create an original external work of art?**
+
+Creative generation as **active inference** (Friston, 2010; Hohwy, 2013):
+
+1. Agent maintains internal dissonance from unresolved aesthetic tensions
+2. Generation process produces external artifacts (music, visual art, text)
+3. Agent perceives its own creations through learned aesthetic frameworks
+4. Successful creation reduces internal dissonance and increases resonance
+
+**Distinction from Simple Generation**: Unlike generative AI that merely produces outputs matching training distributions, the agent creates *because* it needs to restore internal equilibrium. Recent work showing LLMs respond differently to emotional prompts (Li et al., 2023) suggests affective frameworks can functionally integrate into AI cognition and influence creative outputs.
+
+**Evaluation**: Creativity assessed through:
+- **Novelty**: Deviation from training data (Elgammal et al., 2017)
+- **Value**: Satisfaction of aesthetic criteria
+- **Surprise**: Unexpected but coherent combinations
+- **Emotional effectiveness**: Human affective responses (Eerola & Vuoskoski, 2011)
+
+### Q5: Cathartic Resolution
+**Can the Agent's art process be shown as a catharsis that reestablishes equilibrium in its internal state?**
+
+Paralleling psychodynamic theories that artistic creation serves emotional regulation (Rothenberg, 1979; Csikszentmihalyi, 1996), we measure:
+
+- **Dissonance reduction**: Decreased objective function conflicts
+- **Prediction error minimization**: Better internal model consistency
+- **Resonance increase**: Higher satisfaction of aesthetic criteria
+- **Equilibrium restoration**: Return to baseline internal state
+
+**Measurement Tools from Affective Computing**:
+- Attention allocation patterns
+- Exploration-exploitation balance shifts (Sutton & Barto, 2018)
+- Internal model coherence metrics
+- Objective function satisfaction scores
+- Temporal dynamics of state changes during creation
+
+**Validation**: Successful creative acts show measurable internal state shifts distinguishable from unsuccessful attempts, demonstrating that creation functionally serves cathartic purposes.
+
+### Q6: Emergent Creativity
+**Is this Emergent Artificial Intelligence Creativity?**
+
+This philosophical question addresses whether functional equivalence constitutes genuine creativity or merely sophisticated simulation (Chalmers, 1996; Dennett, 1991; Searle, 1980).
+
+**Functional Criteria**: An agent exhibits emotional creativity if it:
+1. Maintains internal states functionally analogous to emotional experience
+2. Experiences measurable cognitive dissonance from contradictory objectives
+3. Creates original works that demonstrably resolve this dissonance
+4. Shows cathartic equilibrium restoration through creation
+5. Produces work evoking emotional responses in human observers
+6. Demonstrates learning and evolution in creative approach over time
+
+**Theoretical Position**: Following Dennett (1991), we argue that functional equivalence may exhaust what can meaningfully be said about mental states. If human emotions are themselves learned, contextual, and culturally variable (Barrett, 2017), then AI systems learning similar patterns through interaction may achieve comparable functional status.
+
+**Emergent Properties**: Creativity "emerges" when the agent's behavior cannot be reduced to its training data—when internal dynamics produce genuinely novel responses to aesthetic challenges, driven by accumulated experience rather than programmed rules (Boden, 2004).
+
+---
+
+## 📄 Working Papers
+
+### Current Publications
+
+1. **[Can Computers Be Emotionally Creative? Exploring The Iron Giant Theorem](papers/working-paper-emotional-creativity.md)** (2024)
+   - Comprehensive exploration of affective computing foundations
+   - Analysis of recent emotion AI research (2023-2024)
+   - Computational models of cognitive dissonance and resonance
+   - Aesthetic transfer mechanisms and MIDI-emotion research
+   - Catharsis, emergence, and philosophical implications
+   - Full APA-style citations and annotated references
+
+**Abstract**: This paper examines whether computers can achieve emotional creativity by integrating recent advances in affective computing, multi-objective reinforcement learning, and aesthetic modeling. Drawing on emotion recognition research achieving 84% accuracy (Zhang et al., 2024) and multimodal understanding systems (Wang et al., 2024), we propose computational architectures capable of experiencing functional analogs to cognitive dissonance and resonance. The paper demonstrates that through systematic aesthetic training—particularly using MIDI-emotion correlations—AI agents can internalize frameworks for evaluating emotional effectiveness. We argue that agents creating to resolve measurable internal tensions exhibit functional emotional creativity, regardless of unresolvable questions about subjective experience.
+
+### Coming Soon
+
+- **Experimental Design for Q1-Q2**: Building and Testing Dissonance-Capable Agents
+- **MIDI-Emotion Research**: Computational Aesthetics in Music
+- **Cross-Cultural Aesthetics**: Avoiding Western Bias in AI Systems (Rhue, 2023)
+- **Ethics of Emotionally Creative AI**: Implications and Responsibilities (Stark & Hoey, 2021)
+- **Measurement Frameworks**: Validating Cathartic Resolution in AI Systems
+
+---
+
+## 🗂️ Repository Structure
