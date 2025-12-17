@@ -1,0 +1,24 @@
+Q1: Can we build dissonance/resonance capability?
+├── Tensor 3: Dissonance (Sweeney scale)
+└── Tensor 4: Flow/Resonance (FSS)
+
+Q2: Can we expose agent to dissonance/resonance?
+├── Tensor 2: Aesthetic judgment (Berlyne)
+└── Tensor 1: Emotional response (Russell)
+
+Q3: Can we transfer aesthetics?
+├── Tensor 2: Aesthetic dimensions
+└── Tensor 5: Semantic meaning (Osgood)
+
+Q4: Can agent create original art?
+├── Tensor 1: Emotional state tracking
+└── Tensor 4: Creative engagement
+
+Q5: Does creation achieve catharsis?
+├── Tensor 3: Dissonance (high → low)
+├── Tensor 4: Flow (low → high)
+└── Tensor 1: Emotional shift (negative → positive valence)
+
+Q6: Is this emergent creativity?
+├── All tensors: Functional equivalence to human creative process
+└── Comparison: Agent patterns vs. human patterns across all dimensions
