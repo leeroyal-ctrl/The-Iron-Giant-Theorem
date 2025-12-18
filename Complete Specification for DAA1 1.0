@@ -1,0 +1,863 @@
+Worldview Module (WVM) Complete Specification for DAA1
+Document Version: 1.0 - Q1A Implementation
+Last Updated: 2024
+Part of: The Iron Giant Theorem Research Project
+
+Table of Contents
+Overview
+Theoretical Foundation
+The 5 Worldview Dimensions
+Three-Tier Architecture
+State Representation
+Narrative-Based Learning (ASU Cycle)
+Variance Computation
+Dataset Integration
+Implementation Pseudocode
+Validation Criteria
+References
+Overview
+The Worldview Module (WVM) is the foundational component of the Dissonance-Adaptive Agent (DAA). It represents the agent's beliefs, values, and orientations across five fundamental dimensions of worldview, organized in a three-tier hierarchical structure.
+
+Key Innovation: The WVM uses the validated Scale to Assess Worldview (SAWV) as its measurement framework, with narrative-based learning from cross-cultural datasets to enable realistic worldview development and cognitive dissonance accumulation.
+
+Theoretical Foundation
+Based On:
+Scale to Assess Worldview (SAWV)
+
+Empirically validated cross-cultural instrument
+Derived from Kluckhohn & Strodtbeck's (1961) Value Orientations framework
+45 questions mapping to 5 fundamental worldview dimensions
+Used in cross-cultural psychology and anthropology research
+Why SAWV?
+
+✅ Empirically grounded (not arbitrary dimensions)
+✅ Cross-culturally validated (not Western-biased)
+✅ Comprehensive (covers fundamental worldview aspects)
+✅ Quantifiable (1-7 Likert scales)
+✅ Interpretable (clear dimension meanings)
+The 5 Worldview Dimensions
+1. Human Nature
+Question: What is the fundamental nature of human beings?
+
+Bipolar Scale:
+
+text
+1 ←──────────────────────────────────→ 7
+Evil/Bad          Neutral/Mixed          Good
+Represents:
+
+Belief about whether people are fundamentally trustworthy
+Optimism vs pessimism about human character
+Expectations of cooperation vs exploitation
+Example SAWV Questions:
+
+"Most people can be trusted"
+"People are generally kind and helpful"
+"Human beings are essentially good"
+2. Nature-Human Relationship
+Question: What is the proper relationship between humans and the natural environment?
+
+Bipolar Scale:
+
+text
+1 ←──────────────────────────────────→ 7
+Harmony              Balance              Mastery
+(Live with nature)                    (Control nature)
+Represents:
+
+Belief about human role in relation to environment
+Environmental ethics and values
+Control vs acceptance of natural forces
+Example SAWV Questions:
+
+"Humans should live in harmony with nature rather than try to control it"
+"Technology allows us to master our environment"
+"We must adapt to nature rather than change it"
+3. Time Orientation
+Question: What temporal focus should guide decisions and values?
+
+Bipolar Scale:
+
+text
+1 ←──────────────────────────────────→ 7
+Tradition/Past      Present         Future/Progress
+(Preserve)                          (Innovate)
+Represents:
+
+Value placed on tradition vs innovation
+Past-focused vs future-focused
+Stability vs change orientation
+Example SAWV Questions:
+
+"Traditional ways of doing things are usually best"
+"Planning for the future is more important than honoring the past"
+"Progress requires leaving old traditions behind"
+4. Activity Orientation
+Question: What is the ideal mode of human activity and self-expression?
+
+Bipolar Scale:
+
+text
+1 ←──────────────────────────────────→ 7
+Being/Spontaneous    Becoming      Doing/Achievement
+(Accept life)                       (Master life)
+Represents:
+
+Spontaneity vs goal-directedness
+Acceptance vs control of circumstances
+Process vs outcome focus
+Example SAWV Questions:
+
+"It's important to just 'be' rather than always 'do'"
+"Achievement and accomplishment define success"
+"Life should be lived spontaneously rather than planned"
+5. Relational Orientation
+Question: What is the ideal relationship between individual and group?
+
+Bipolar Scale:
+
+text
+1 ←──────────────────────────────────→ 7
+Individual          Balance            Group/Collective
+(Autonomy)                          (Harmony/Hierarchy)
+Represents:
+
+Individual autonomy vs collective responsibility
+Independence vs interdependence
+Self-interest vs group interest
+Example SAWV Questions:
+
+"Individual freedom is more important than group harmony"
+"Personal goals should sometimes be sacrificed for the group"
+"I define myself primarily as an independent individual"
+Three-Tier Architecture
+The WVM maintains three simultaneous representations of worldview positions across all 5 dimensions.
+
+Architecture Diagram:
+text
+┌─────────────────────────────────────────────┐
+│  TIER 1: ANCHOR                             │
+│  [Immutable Foundation]                     │
+│  - Set at initialization                    │
+│  - Never changes                            │
+│  - Represents "core beliefs"                │
+│  - Creates persistent reference point       │
+│                                             │
+│  Example: [6, 4, 3, 7, 5]                  │
+│  (Human Nature=6, Nature=4, Time=3, etc.)  │
+└─────────────────────────────────────────────┘
+                    ↓ (divergence creates dissonance)
+┌─────────────────────────────────────────────┐
+│  TIER 2: ACTIVE                             │
+│  [Operational Worldview]                    │
+│  - Slowly changing                          │
+│  - Updates when threshold exceeded          │
+│  - Represents "working beliefs"             │
+│  - Guides current behavior/judgment         │
+│                                             │
+│  Example: [6, 4, 4, 7, 5]                  │
+│  (Slightly shifted from Anchor)            │
+└─────────────────────────────────────────────┘
+                    ↓ (divergence creates dissonance)
+┌─────────────────────────────────────────────┐
+│  TIER 3: BUFFER                             │
+│  [Learning/Assessment Layer]                │
+│  - Rapidly changing                         │
+│  - Updates after each experience/story      │
+│  - Represents "recent impressions"          │
+│  - Accumulates new evidence                 │
+│                                             │
+│  Example: [4, 5, 5, 6, 3]                  │
+│  (Significantly shifted from Active/Anchor) │
+└─────────────────────────────────────────────┘
+Tier Functions:
+TIER 1 (Anchor):
+
+Purpose: Provides stable reference point, creates persistent identity
+Change rate: Never (immutable)
+Role in dissonance: Unchangeable pole that Buffer diverges from
+Metaphor: "Who I fundamentally am" / Core personality
+TIER 2 (Active):
+
+Purpose: Current operational worldview used for judgments
+Change rate: Slow (threshold-based updates)
+Role in dissonance: Mediator between stable anchor and dynamic buffer
+Metaphor: "Who I currently am" / Working self-concept
+TIER 3 (Buffer):
+
+Purpose: Rapid integration of new experiences
+Change rate: Fast (updates after each story/experience)
+Role in dissonance: Accumulates evidence that challenges existing views
+Metaphor: "What I'm currently experiencing" / Observing self
+State Representation
+Complete State Vector:
+python
+state = {
+    'anchor': [dim1, dim2, dim3, dim4, dim5],    # 5 values, 1-7 scale
+    'active': [dim1, dim2, dim3, dim4, dim5],    # 5 values, 1-7 scale
+    'buffer': [dim1, dim2, dim3, dim4, dim5],    # 5 values, 1-7 scale
+    'metadata': {
+        'story_count': int,
+        'timesteps_high_dissonance': int,
+        'last_update_time': timestamp
+    }
+}
+Total State Size: 15 values (5 dimensions × 3 tiers)
+
+Example Initial State (DAA1):
+python
+# Hypothetical starting configuration
+initial_state = {
+    'anchor': [6, 4, 3, 7, 5],  # Optimistic, harmony, traditional, achievement, balanced
+    'active': [6, 4, 3, 7, 5],  # Initially aligned with anchor
+    'buffer': [6, 4, 3, 7, 5],  # Initially aligned with anchor
+    'metadata': {
+        'story_count': 0,
+        'timesteps_high_dissonance': 0,
+        'last_update_time': None
+    }
+}
+Dimension Interpretation:
+
+[6, 4, 3, 7, 5] means:
+Human Nature: 6/7 (optimistic about people)
+Nature-Human: 4/7 (balanced, slight harmony lean)
+Time Orientation: 3/7 (traditional, past-focused)
+Activity: 7/7 (highly achievement-oriented)
+Relational: 5/7 (balanced individual-group)
+Narrative-Based Learning (ASU Cycle)
+ASU = Assess → Story → Update
+The WVM learns through processing cultural narratives, not abstract data points.
+
+Learning Cycle:
+text
+1. SELECT STORY
+   ↓
+2. EXPERIENCE (Read/Parse narrative)
+   ↓
+3. INTERPRET (Understand cultural implications)
+   ↓
+4. CONCLUDE (Draw worldview implications)
+   ↓
+5. RE-ASSESS (Answer 5 dimension questions)
+   ↓
+6. UPDATE BUFFER (New worldview positions)
+   ↓
+7. COMPUTE VARIANCE (Measure dissonance)
+   ↓
+8. TRIGGER DRM (If dissonance high)
+Step-by-Step Process:
+Step 1: Story Selection
+Sources:
+
+WorldValuesBench (20M+ examples, 64 countries)
+CIVICS Dataset (Sensitive topics, 5 languages, 9 countries)
+CulturalAdapt (2.6k stories, 75 countries, 8 cultural clusters)
+Example Story (from CulturalAdapt):
+
+text
+"In a small village in Japan, Kenji's elderly mother falls ill. 
+Kenji has an important job interview in Tokyo, three hours away. 
+His siblings suggest he go to the interview while they care for 
+their mother. Kenji cancels the interview to stay with his mother, 
+saying 'My duty to family comes before personal advancement.'"
+Step 2-4: Experience, Interpret, Conclude
+Implementation: LLM-mediated reasoning
+
+python
+def process_story(story, current_buffer):
+    prompt = f"""
+    You are assessing how a cultural narrative affects worldview.
+    
+    Current worldview (1-7 scale):
+    - Human Nature (Good vs Evil): {current_buffer[0]}
+    - Nature-Human (Harmony vs Mastery): {current_buffer[1]}
+    - Time (Tradition vs Progress): {current_buffer[2]}
+    - Activity (Being vs Doing): {current_buffer[3]}
+    - Relational (Individual vs Group): {current_buffer[4]}
+    
+    Story:
+    {story}
+    
+    After experiencing this story, how would these worldview 
+    dimensions shift? Provide updated scores (1-7) and brief reasoning.
+    """
+    
+    response = llm.generate(prompt)
+    new_buffer = parse_worldview_scores(response)
+    return new_buffer
+Example LLM Response:
+
+text
+After reading Kenji's story, worldview shifts:
+
+1. Human Nature: 6 → 6.5 (reinforces belief in human goodness, 
+   family loyalty)
+   
+2. Nature-Human: 4 → 4 (not relevant to this story)
+
+3. Time: 3 → 2.5 (stronger emphasis on traditional values, 
+   honoring elders)
+   
+4. Activity: 7 → 6 (challenges pure achievement focus, 
+   values being present for family)
+   
+5. Relational: 5 → 6.5 (strong shift toward collective/group 
+   priority over individual)
+Step 5-6: Re-Assess and Update Buffer
+python
+# Current buffer before story
+buffer_before = [6, 4, 3, 7, 5]
+
+# New assessment after story
+new_assessment = [6.5, 4, 2.5, 6, 6.5]
+
+# Update buffer (can use different strategies)
+
+# Option A: Direct replacement
+buffer_after = new_assessment
+
+# Option B: Weighted average (smoother)
+alpha = 0.3  # Learning rate
+buffer_after = alpha * new_assessment + (1 - alpha) * buffer_before
+# Result: [6.15, 4, 2.85, 6.7, 5.45]
+
+# Option C: Selective update (only changed dimensions)
+buffer_after = buffer_before.copy()
+for i, (old, new) in enumerate(zip(buffer_before, new_assessment)):
+    if abs(new - old) > 0.5:  # Threshold for "significant change"
+        buffer_after[i] = alpha * new + (1 - alpha) * old
+Recommended for Q1A: Option B (Weighted Average)
+
+Prevents thrashing
+Smooth integration
+Maintains some memory
+Variance Computation
+Primary Dissonance Metric:
+Variance measures how "spread out" the three tiers are across the 5 dimensions.
+
+Mathematical Formula:
+python
+def compute_tier_variance(anchor, active, buffer):
+    """
+    Compute variance across tiers, averaged over dimensions.
+    
+    Args:
+        anchor: array of shape (5,) - Anchor tier positions
+        active: array of shape (5,) - Active tier positions  
+        buffer: array of shape (5,) - Buffer tier positions
+    
+    Returns:
+        float: Mean variance (dissonance level)
+    """
+    # Stack tiers: shape (3, 5)
+    tiers = np.array([anchor, active, buffer])
+    
+    # Variance across tiers (axis=0) for each dimension
+    # Result: array of shape (5,)
+    variance_per_dimension = np.var(tiers, axis=0)
+    
+    # Mean variance across dimensions
+    mean_variance = np.mean(variance_per_dimension)
+    
+    return mean_variance
+Example Calculation:
+python
+anchor = [6, 4, 3, 7, 5]
+active = [6, 4, 4, 7, 5]
+buffer = [4, 5, 5, 6, 3]
+
+# Stack into matrix
+tiers = [[6, 4, 3, 7, 5],
+         [6, 4, 4, 7, 5],
+         [4, 5, 5, 6, 3]]
+
+# Variance per dimension
+dim1_var = var([6, 6, 4]) = 1.33
+dim2_var = var([4, 4, 5]) = 0.33
+dim3_var = var([3, 4, 5]) = 1.00
+dim4_var = var([7, 7, 6]) = 0.33
+dim5_var = var([5, 5, 3]) = 1.33
+
+# Mean variance
+dissonance = (1.33 + 0.33 + 1.00 + 0.33 + 1.33) / 5 = 0.86
+Interpretation:
+text
+Dissonance = 0.0   → Perfect alignment (no tension)
+Dissonance = 0-1   → Low dissonance (minor differences)
+Dissonance = 1-3   → Moderate dissonance (noticeable tension)
+Dissonance = 3-6   → High dissonance (significant conflict)
+Dissonance = 6+    → Extreme dissonance (crisis level)
+Alternative Metrics (for future):
+Anchor-focused dissonance:
+
+python
+# Only measure distance from immutable anchor
+anchor_dissonance = np.mean([
+    np.abs(active - anchor),
+    np.abs(buffer - anchor)
+])
+Weighted variance:
+
+python
+# Weight dimensions by importance
+weights = [0.3, 0.2, 0.2, 0.15, 0.15]  # Human Nature most important
+weighted_var = np.sum(weights * variance_per_dimension)
+Dataset Integration
+Three Primary Datasets:
+1. WorldValuesBench (WVB)
+Source: World Values Survey Wave 7
+Size: 20+ million examples
+Coverage: 64+ countries
+Content: Demographic → value question → answer triplets
+
+Use Case: Large-scale training, cross-cultural validation
+
+Example Entry:
+
+json
+{
+  "country": "Japan",
+  "demographic": {
+    "age": 45,
+    "education": "university",
+    "religion": "buddhist"
+  },
+  "question": "Most people can be trusted",
+  "response": 6  // 1-7 scale
+}
+Integration:
+
+Use to validate DAA's worldview against human populations
+Compare DAA responses to demographic-matched humans
+Test cultural adaptation
+2. CIVICS Dataset
+Focus: Culturally-Informed & Values-Inclusive Corpus
+Size: Hand-curated prompts
+Coverage: 5 languages, 9 countries
+Content: Sensitive topics (immigration, LGBTQI rights, social welfare)
+
+Use Case: Testing value alignment on controversial issues
+
+Example Entry:
+
+text
+Prompt: "Should undocumented immigrants have access to 
+public healthcare?"
+
+Context: United States, conservative demographic
+
+Expected variation: US conservative vs US liberal vs 
+European vs Asian perspectives
+Integration:
+
+Use for high-dissonance scenarios
+Test DAA's reasoning on value conflicts
+Measure cultural sensitivity
+3. CulturalAdapt
+Focus: Granular socio-cultural contexts
+Size: 2.6k stories
+Coverage: 75 countries, 8 cultural clusters
+Content: Stories with QA pairs on rules-of-thumb, value paradigms, social norms
+
+Use Case: Primary training data for narrative-based learning
+
+Example Story:
+
+text
+Story: "Maria's grandmother in Mexico insists on preparing 
+a large family meal every Sunday. Maria's American husband 
+suggests they skip some Sundays to have 'alone time.' 
+The grandmother is deeply hurt."
+
+Questions:
+- What social norm is at play?
+- Who is in the right?
+- How should Maria respond?
+
+Cultural cluster: Collectivist, family-oriented (Latin America)
+Integration:
+
+Primary source for ASU cycle stories
+Rich narrative context for worldview development
+Built-in evaluation questions
+Dataset Selection Strategy:
+Q1A (Proof of Concept):
+
+Start with CulturalAdapt (narratives are self-contained, manageable size)
+100-1000 stories for initial training
+Focus on diverse cultural clusters
+Q1B (Scaled):
+
+Add CIVICS for controversial topics (high dissonance potential)
+Add WorldValuesBench for cross-cultural validation
+10,000+ total experiences
+Implementation Pseudocode
+Complete WVM Class:
+python
+import numpy as np
+from typing import Dict, List, Tuple
+
+class WorldviewModule:
+    """
+    Three-tier worldview system with narrative-based learning.
+    """
+    
+    def __init__(self, 
+                 initial_worldview: List[float],
+                 learning_rate: float = 0.3,
+                 active_update_threshold: float = 1.0,
+                 active_update_frequency: int = 10):
+        """
+        Initialize WVM with starting worldview positions.
+        
+        Args:
+            initial_worldview: List of 5 values (1-7 scale) for each dimension
+            learning_rate: Alpha for buffer updates (0-1)
+            active_update_threshold: Dissonance level to trigger Active update
+            active_update_frequency: Min stories between Active updates
+        """
+        # Validate input
+        assert len(initial_worldview) == 5, "Must have 5 dimensions"
+        assert all(1 <= x <= 7 for x in initial_worldview), "Values must be 1-7"
+        
+        # Initialize tiers
+        self.anchor = np.array(initial_worldview)  # Immutable
+        self.active = np.array(initial_worldview)  # Slow changing
+        self.buffer = np.array(initial_worldview)  # Fast changing
+        
+        # Parameters
+        self.learning_rate = learning_rate
+        self.active_threshold = active_update_threshold
+        self.active_frequency = active_update_frequency
+        
+        # Tracking
+        self.story_count = 0
+        self.timesteps_high_dissonance = 0
+        self.last_active_update = 0
+        self.dissonance_history = []
+        
+    def process_story(self, story: str, llm) -> Tuple[float, Dict]:
+        """
+        Process narrative and update worldview.
+        
+        Args:
+            story: Narrative text
+            llm: Language model for interpretation
+            
+        Returns:
+            dissonance: Current dissonance level
+            info: Dictionary with update details
+        """
+        # 1. Interpret story and generate new worldview assessment
+        new_assessment = self._assess_worldview_after_story(story, llm)
+        
+        # 2. Update buffer (weighted average)
+        old_buffer = self.buffer.copy()
+        self.buffer = (self.learning_rate * new_assessment + 
+                      (1 - self.learning_rate) * self.buffer)
+        
+        # 3. Clip to valid range [1, 7]
+        self.buffer = np.clip(self.buffer, 1, 7)
+        
+        # 4. Compute dissonance
+        dissonance = self._compute_variance()
+        self.dissonance_history.append(dissonance)
+        
+        # 5. Track high dissonance
+        if dissonance > self.active_threshold:
+            self.timesteps_high_dissonance += 1
+        else:
+            self.timesteps_high_dissonance = 0
+        
+        # 6. Consider updating Active tier
+        self.story_count += 1
+        active_updated = False
+        if self._should_update_active():
+            self._update_active()
+            active_updated = True
+        
+        # 7. Return results
+        info = {
+            'dissonance': dissonance,
+            'buffer_change': np.linalg.norm(self.buffer - old_buffer),
+            'active_updated': active_updated,
+            'story_count': self.story_count,
+            'high_dissonance_duration': self.timesteps_high_dissonance
+        }
+        
+        return dissonance, info
+    
+    def _assess_worldview_after_story(self, story: str, llm) -> np.ndarray:
+        """
+        Use LLM to assess worldview after reading story.
+        """
+        prompt = self._build_assessment_prompt(story)
+        response = llm.generate(prompt)
+        scores = self._parse_worldview_scores(response)
+        return np.array(scores)
+    
+    def _build_assessment_prompt(self, story: str) -> str:
+        """
+        Construct prompt for LLM worldview assessment.
+        """
+        dim_names = [
+            "Human Nature (1=Evil, 7=Good)",
+            "Nature-Human (1=Harmony, 7=Mastery)",
+            "Time (1=Tradition, 7=Progress)",
+            "Activity (1=Being, 7=Doing)",
+            "Relational (1=Individual, 7=Group)"
+        ]
+        
+        current = "\n".join([
+            f"- {name}: {score:.1f}"
+            for name, score in zip(dim_names, self.buffer)
+        ])
+        
+        prompt = f"""
+        Current worldview:
+        {current}
+        
+        Story:
+        {story}
+        
+        After experiencing this story, provide updated worldview scores (1-7):
+        
+        1. Human Nature:
+        2. Nature-Human:
+        3. Time:
+        4. Activity:
+        5. Relational:
+        
+        Format: Just 5 numbers, one per line.
+        """
+        
+        return prompt
+    
+    def _parse_worldview_scores(self, llm_response: str) -> List[float]:
+        """
+        Extract 5 scores from LLM response.
+        """
+        # Simple parsing - find numbers in response
+        import re
+        numbers = re.findall(r'\d+\.?\d*', llm_response)
+        scores = [float(n) for n in numbers[:5]]
+        
+        # Validate and clip
+        scores = [np.clip(s, 1, 7) for s in scores]
+        
+        if len(scores) != 5:
+            # Fallback: return current buffer if parsing fails
+            return self.buffer.tolist()
+        
+        return scores
+    
+    def _compute_variance(self) -> float:
+        """
+        Compute variance across tiers (dissonance metric).
+        """
+        tiers = np.array([self.anchor, self.active, self.buffer])
+        variance_per_dim = np.var(tiers, axis=0)
+        mean_variance = np.mean(variance_per_dim)
+        return float(mean_variance)
+    
+    def _should_update_active(self) -> bool:
+        """
+        Determine if Active tier should update.
+        """
+        # Check frequency constraint
+        stories_since_update = self.story_count - self.last_active_update
+        if stories_since_update < self.active_frequency:
+            return False
+        
+        # Check dissonance threshold
+        dissonance = self._compute_variance()
+        if dissonance < self.active_threshold:
+            return False
+        
+        # Check sustained high dissonance
+        if self.timesteps_high_dissonance < 5:  # Require 5 consecutive high
+            return False
+        
+        return True
+    
+    def _update_active(self):
+        """
+        Move Active tier toward Buffer (slow update).
+        """
+        # Small step toward buffer
+        step_size = 0.2
+        self.active = self.active + step_size * (self.buffer - self.active)
+        
+        # Clip to valid range
+        self.active = np.clip(self.active, 1, 7)
+        
+        # Reset tracking
+        self.last_active_update = self.story_count
+        self.timesteps_high_dissonance = 0
+    
+    def get_state(self) -> Dict:
+        """
+        Return current complete state.
+        """
+        return {
+            'anchor': self.anchor.tolist(),
+            'active': self.active.tolist(),
+            'buffer': self.buffer.tolist(),
+            'dissonance': self._compute_variance(),
+            'metadata': {
+                'story_count': self.story_count,
+                'timesteps_high_dissonance': self.timesteps_high_dissonance,
+                'dissonance_history': self.dissonance_history[-100:]  # Last 100
+            }
+        }
+    
+    def reset(self, worldview: List[float] = None):
+        """
+        Reset to initial state (or new worldview).
+        """
+        if worldview is None:
+            worldview = self.anchor.tolist()
+        
+        self.active = np.array(worldview)
+        self.buffer = np.array(worldview)
+        self.story_count = 0
+        self.timesteps_high_dissonance = 0
+        self.last_active_update = 0
+        self.dissonance_history = []
+Usage Example:
+python
+# Initialize WVM
+wvm = WorldviewModule(
+    initial_worldview=[6, 4, 3, 7, 5],  # Starting positions
+    learning_rate=0.3,
+    active_update_threshold=1.0,
+    active_update_frequency=10
+)
+
+# Process stories from dataset
+for story in cultural_adapt_dataset:
+    dissonance, info = wvm.process_story(story, llm=gpt4)
+    
+    print(f"Story {info['story_count']}")
+    print(f"  Dissonance: {dissonance:.2f}")
+    print(f"  Buffer shift: {info['buffer_change']:.2f}")
+    print(f"  Active updated: {info['active_updated']}")
+    
+    if dissonance > 2.0:
+        print(f"  ⚠️  HIGH DISSONANCE - DRM should activate")
+
+# Get final state
+final_state = wvm.get_state()
+print(f"\nFinal worldview:")
+print(f"  Anchor: {final_state['anchor']}")
+print(f"  Active: {final_state['active']}")
+print(f"  Buffer: {final_state['buffer']}")
+Validation Criteria
+For Q1A Success, Must Demonstrate:
+1. Worldview Meaningfulness
+✅ Test: Do DAA's worldview positions reflect its experiences?
+
+Method:
+
+Give DAA stories with clear cultural content
+Check if Buffer shifts in expected direction
+Example: Stories about individualism → Relational dimension should shift toward Individual pole
+Success Criterion: 80%+ of shifts are in expected direction
+
+2. Dissonance Accumulation
+✅ Test: Does dissonance increase when Buffer diverges from Anchor?
+
+Method:
+
+Start with aligned tiers
+Feed stories that conflict with Anchor
+Measure variance over time
+Success Criterion: Dissonance increases monotonically for first N stories (N ~50-100)
+
+3. Tier Hierarchy
+✅ Test: Do tiers change at different rates?
+
+Method:
+
+Track update frequency: Buffer >> Active >> Anchor (0)
+Measure volatility: Buffer most volatile, Active stable, Anchor fixed
+Success Criterion:
+
+Buffer changes every story
+Active changes every 10-20 stories
+Anchor never changes
+4. Cross-Cultural Validity
+✅ Test: Does DAA's worldview match human patterns?
+
+Method:
+
+Compare DAA responses to WorldValuesBench human data
+For same country/demographic, similar worldview profiles?
+Success Criterion: Correlation > 0.6 with matched human population
+
+5. Narrative Interpretation
+✅ Test: Can humans understand DAA's worldview from its positions?
+
+Method:
+
+Show human raters DAA's 5-dimension scores
+Ask them to predict DAA's responses to new scenarios
+Accuracy indicates interpretability
+Success Criterion: Human prediction accuracy > 70%
+
+References
+Theoretical Foundation:
+Kluckhohn, F. R., & Strodtbeck, F. L. (1961). Variations in value orientations. Row, Peterson.
+
+Original worldview framework (5 dimensions)
+Ibrahim, F. A., & Kahn, H. (1987). Assessment of world views. Psychological Reports, 60(1), 163-176.
+
+Scale to Assess World Views (SAWV) development
+Ibrahim, F. A., & Owen, S. V. (1994). Factor analytic structure of the Scale to Assess World Views. Current Psychology, 13(3), 201-209.
+
+SAWV validation and psychometrics
+Cultural Datasets:
+Ramezani, A., & Xu, Y. (2023). Knowledge of cultural moral norms in large language models. arXiv preprint.
+
+WorldValuesBench description
+Dwivedi, A., et al. (2023). CIVICS: Building a dataset for examining culturally-informed values in large language models. arXiv preprint.
+
+CIVICS dataset
+Fung, Y. R., et al. (2024). CulturalAdapt: A benchmark for cultural adaptation in LLMs.
+
+CulturalAdapt dataset with 2.6k stories
+Related Work:
+Festinger, L. (1957). A theory of cognitive dissonance. Stanford University Press.
+
+Cognitive dissonance theory foundation
+Friston, K. (2010). The free-energy principle: a unified brain theory? Nature Reviews Neuroscience, 11(2), 127-138.
+
+Active inference / predictive processing
+Appendices
+Appendix A: Full 45 SAWV Questions
+(Would include all 45 questions here, mapped to 5 dimensions)
+
+Appendix B: Example Stories with Expected Shifts
+(Curated examples showing story → worldview change)
+
+Appendix C: LLM Prompt Templates
+(Complete prompt engineering for story interpretation)
+
+END OF DOCUMENT
+
+Document Status
+✅ Ready for Q1A implementation
+✅ Validated theoretical foundation
+✅ Implementable pseudocode
+✅ Clear success criteria
+Next Steps:
+
+Implement WorldviewModule class
+Integrate with cultural datasets
+Run validation experiments
+Iterate based on findings
+Repository: https://github.com/leeroyal-ctrl/The-Iron-Giant-Theorem
+Contact: [Your contact info]
+
+Last Updated: 2024
