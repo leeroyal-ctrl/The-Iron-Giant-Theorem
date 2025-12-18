@@ -1,0 +1,49 @@
+flowchart LR
+    %% ===== Agent Layer =====
+    A["Autonomous AI Agent<br/>(LLM Reasoning Engine)"]
+    A1["Task Solution<br/>(Proposed State Changes)"]
+    A2["Action Plan<br/>(Multi-Step Update Graph)"]
+
+    A --> A1
+    A1 --> A2
+
+    %% ===== Federation Boundary =====
+    subgraph DF["Data Federation Complex"]
+        direction TB
+
+        %% --- Governance & Schema ---
+        S["Canonical Data Schema<br/>(Ontology & Contracts)"]
+        P["Policy Engine<br/>(Access Control & Safety)"]
+        V["Validation Engine<br/>(Schema & Integrity Checks)"]
+
+        %% --- Planning & Execution ---
+        Q["Query & Update Planner<br/>(Logical → Physical Plan)"]
+        E["Execution Engine<br/>(Transactional Orchestrator)"]
+        O["Observability & Audit Log<br/>(Lineage & Traceability)"]
+
+        %% --- Federated Assets ---
+        subgraph WA["Warehouse Assets"]
+            RDB["Relational Data Stores<br/>(OLTP / OLAP Tables)"]
+            VS["Vector Store<br/>(Embedding Index)"]
+            FS["Feature Store<br/>(Model Input Tensors)"]
+            MA["Model Artifacts<br/>(Parameters & Checkpoints)"]
+        end
+    end
+
+    %% ===== Flow =====
+    A2 -->|"Proposed Updates"| S
+    S --> V
+    V --> P
+
+    P -->|"Approved Plan"| Q
+    Q --> E
+
+    E --> RDB
+    E --> VS
+    E --> FS
+    E --> MA
+
+    RDB --> O
+    VS --> O
+    FS --> O
+    MA --> O
