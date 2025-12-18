@@ -1,0 +1,99 @@
+Decisions You Need to Make:
+A. Reward Function Weights
+
+text
+R = w1*(-Dissonance) + w2*(Accuracy) + w3*(Coherence)
+What are w1, w2, w3? (e.g., 0.7, 0.2, 0.1?)
+Or should we derive them together?
+B. Action Space Definition
+
+What specific actions can DRM take?
+Adjust Active tier positions? By how much?
+Adjust Buffer learning rate?
+Request more information?
+Other actions?
+C. Algorithm Choice
+
+PPO (simpler, more stable)
+SAC (more sample efficient, continuous actions)
+Or let me recommend based on your constraints?
+D. Implementation Preference
+
+Coding from scratch?
+Using Stable Baselines3? (easiest)
+Using RLlib?
+Other framework?
+2. Specifications for DAA1:
+Worldview Initial State:
+
+Anchor: [8, 7, 8] on dimensions [Determinism, Objective Meaning, Purposeful Universe]
+Active: [8, 7, 8] (starts aligned)
+Buffer: [8, 7, 8] (starts aligned)
+Constraints:
+
+Anchor: Never changes
+Active: Updates only when ??? (threshold? algorithm decides?)
+Buffer: Updates how? (normal learning? at what rate?)
+Experience Stream:
+
+What kind of observations will DAA1 receive?
+How do they affect Buffer tier?
+3. What You Already Know:
+Your ideas on:
+
+Rules for DRM behavior
+Incentive structures
+Constraints you want
+What strategies should/shouldn't be allowed
+Include anything you've thought about:
+
+Evidence rejection rules
+Update thresholds
+Strategy preferences
+Failure modes to prevent
+4. Technical Constraints:
+Computational budget (local machine? cloud?)
+Timeline (need prototype in weeks? months?)
+Programming language preference (Python assumed?)
+Existing codebase? (starting from scratch?)
+Minimal Set To Resume:
+If you only give me ONE thing:
+Just tell me:
+
+"Here are the specific actions DRM can take: [list]"
+
+That's the most critical decision point.
+
+Everything else we can derive together, but action space defines what's possible.
+
+Format Suggestion:
+markdown
+## DRM Design Session - Starting Point
+
+### DAA1 Configuration:
+- Worldview dimensions: [list 3]
+- Anchor positions: [values]
+- Initial state: [all tiers aligned]
+
+### DRM Action Space:
+1. Action type 1: [description]
+2. Action type 2: [description]
+...
+
+### Reward Function Preferences:
+- Dissonance weight: [value or "let's decide"]
+- Accuracy weight: [value or "let's decide"]
+- Coherence weight: [value or "let's decide"]
+
+### Constraints:
+- Must NOT: [list]
+- Must preserve: [list]
+- Should prefer: [list]
+
+### Implementation:
+- Framework: [Stable Baselines3 / RLlib / scratch / flexible]
+- Timeline: [rough estimate]
+- Resources: [computational constraints]
+
+### Your Ideas:
+[Any rules, incentives, strategies you've been thinking about]
