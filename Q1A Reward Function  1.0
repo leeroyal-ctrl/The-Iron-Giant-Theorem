@@ -1,0 +1,421 @@
+DRM Reward Function Specification for DAA1
+Document Version: 1.0 - Q1A Implementation
+Overview
+This document specifies the reward function for the Dissonance Resolution Module (DRM) in the first Dissonance-Adaptive Agent (DAA1). The reward function uses percent delta improvement in tier variance as the primary signal to guide the DRM's learning process.
+
+Core Reward Formula
+Primary Reward: Percent Variance Reduction
+text
+R = (Variance_before - Variance_after) / Variance_before
+Where:
+
+Variance_before = tier variance before DRM action
+Variance_after = tier variance after DRM action
+Result: R ∈ [-∞, 1.0]
+Positive reward = variance decreased (good)
+Zero reward = no change
+Negative reward = variance increased (bad)
+Tier Variance Computation
+Definition
+Variance measures how spread out the three tiers (Anchor, Active, Buffer) are across the worldview dimensions.
+
+Lower variance = More aligned tiers = Less dissonance
+
+Mathematical Formulation
+python
+def tier_variance(anchor, active, buffer):
+    """
+    Compute variance across tiers, averaged over dimensions.
+    
+    Args:
+        anchor: array of shape (n_dimensions,) - Anchor tier positions
+        active: array of shape (n_dimensions,) - Active tier positions
+        buffer: array of shape (n_dimensions,) - Buffer tier positions
+    
+    Returns:
+        float: Mean variance across all dimensions
+    """
+    # Stack tiers into matrix: shape (3, n_dimensions)
+    tiers = np.array([anchor, active, buffer])
+    
+    # Compute variance across tiers (axis=0) for each dimension
+    # Result: array of shape (n_dimensions,)
+    variance_per_dimension = np.var(tiers, axis=0)
+    
+    # Take mean across dimensions
+    # Result: single scalar value
+    mean_variance = np.mean(variance_per_dimension)
+    
+    return mean_variance
+Example Calculation
+Given State:
+
+text
+Anchor: [8, 7, 8]
+Active: [6, 5, 7]
+Buffer: [4, 3, 5]
+Step 1: Stack tiers
+
+text
+Tiers matrix:
+[[8, 7, 8],   # Anchor
+ [6, 5, 7],   # Active
+ [4, 3, 5]]   # Buffer
+Step 2: Compute variance per dimension
+
+text
+Dimension 1: var([8, 6, 4]) = 4.0
+Dimension 2: var([7, 5, 3]) = 4.0
+Dimension 3: var([8, 7, 5]) = 2.33
+Step 3: Mean variance
+
+text
+Mean = (4.0 + 4.0 + 2.33) / 3 = 3.44
+Reward Calculation
+Implementation
+python
+class DRMRewardFunction:
+    def __init__(self, threshold=0.5, time_penalty_alpha=0.01):
+        """
+        Initialize reward function.
+        
+        Args:
+            threshold: Variance threshold above which time penalty applies
+            time_penalty_alpha: Weight for time penalty term
+        """
+        self.threshold = threshold
+        self.alpha = time_penalty_alpha
+    
+    def compute_reward(self, state_before, action, state_after):
+        """
+        Compute reward for a DRM action.
+        
+        Args:
+            state_before: Dict containing 'anchor', 'active', 'buffer' before action
+            action: The action taken by DRM
+            state_after: Dict containing 'anchor', 'active', 'buffer' after action
+        
+        Returns:
+            float: Reward value
+        """
+        # Extract tier positions
+        anchor_before = state_before['anchor']
+        active_before = state_before['active']
+        buffer_before = state_before['buffer']
+        
+        anchor_after = state_after['anchor']
+        active_after = state_after['active']
+        buffer_after = state_after['buffer']
+        
+        # Compute variances
+        var_before = self.tier_variance(anchor_before, active_before, buffer_before)
+        var_after = self.tier_variance(anchor_after, active_after, buffer_after)
+        
+        # Percent improvement
+        if var_before > 1e-6:  # Avoid division by zero
+            reward = (var_before - var_after) / var_before
+        else:
+            # Already at zero variance (perfect alignment)
+            reward = 0.0
+        
+        # Optional: Add time penalty for sustained high dissonance
+        if var_after > self.threshold:
+            timesteps_high = state_after.get('timesteps_high_dissonance', 0)
+            time_penalty = self.alpha * timesteps_high
+            reward -= time_penalty
+        
+        return reward
+    
+    def tier_variance(self, anchor, active, buffer):
+        """
+        Compute variance across tiers, averaged over dimensions.
+        """
+        tiers = np.array([anchor, active, buffer])
+        variance_per_dimension = np.var(tiers, axis=0)
+        return np.mean(variance_per_dimension)
+Reward Properties
+1. Scale Invariance
+✅ Percent-based reward is comparable across different dissonance levels:
+
+text
+Example A:
+- Variance: 10 → 5
+- Reward: (10-5)/10 = 0.5 (50% reduction)
+
+Example B:
+- Variance: 100 → 50
+- Reward: (100-50)/100 = 0.5 (50% reduction)
+Both get same reward because proportional improvement is equal.
+
+2. Zero Reward for No Change
+✅ No action = no reward:
+
+text
+Variance: 5 → 5
+Reward: (5-5)/5 = 0
+Prevents rewarding inaction or status quo maintenance.
+
+3. Negative Reward for Worsening
+✅ Actions that increase dissonance are penalized:
+
+text
+Variance: 5 → 10
+Reward: (5-10)/5 = -1.0
+DRM learns to avoid actions that make things worse.
+
+4. Maximum Reward for Perfect Resolution
+✅ Reducing variance to zero gives maximum reward:
+
+text
+Variance: 5 → 0
+Reward: (5-0)/5 = 1.0
+Perfect tier alignment is maximally rewarded.
+
+Optional Enhancements
+Time Penalty (Functional Degradation)
+Models your insight that sustained high dissonance causes functional impairment.
+
+python
+if variance_after > threshold:
+    time_penalty = alpha * timesteps_high_dissonance
+    reward -= time_penalty
+Effect:
+
+Creates urgency to resolve dissonance quickly
+Prevents indefinite high-dissonance states
+Models human stress response (performance degrades over time)
+Parameters:
+
+threshold: Variance level considered "high dissonance" (e.g., 0.5)
+alpha: How much to penalize per timestep (e.g., 0.01)
+Multi-Objective Extension (Future)
+For Q1B and beyond, can extend to balance multiple objectives:
+
+python
+reward = w1 * percent_variance_reduction 
+       + w2 * accuracy_score
+       + w3 * coherence_score
+       - time_penalty
+For Q1A: Use simple variance reduction only.
+
+Example Scenarios
+Scenario 1: Successful Resolution
+Before Action:
+
+text
+Anchor: [8, 7, 8]
+Active: [6, 5, 7]
+Buffer: [4, 3, 5]
+Variance = 3.44
+Action: Move Buffer toward Anchor
+
+After Action:
+
+text
+Anchor: [8, 7, 8]
+Active: [6, 5, 7]
+Buffer: [6, 5, 6]
+Variance = 1.11
+Reward:
+
+text
+R = (3.44 - 1.11) / 3.44 = 0.677
+Interpretation: 67.7% reduction in variance → Strong positive reward
+
+Scenario 2: Failed Action
+Before Action:
+
+text
+Anchor: [8, 7, 8]
+Active: [6, 5, 7]
+Buffer: [4, 3, 5]
+Variance = 3.44
+Action: Move Active away from Anchor
+
+After Action:
+
+text
+Anchor: [8, 7, 8]
+Active: [5, 4, 6]
+Buffer: [4, 3, 5]
+Variance = 4.67
+Reward:
+
+text
+R = (3.44 - 4.67) / 3.44 = -0.357
+Interpretation: Variance increased by 35.7% → Negative reward
+
+Scenario 3: No Change
+Before Action:
+
+text
+Anchor: [8, 7, 8]
+Active: [6, 5, 7]
+Buffer: [4, 3, 5]
+Variance = 3.44
+Action: Do nothing
+
+After Action:
+
+text
+(Same state)
+Variance = 3.44
+Reward:
+
+text
+R = (3.44 - 3.44) / 3.44 = 0.0
+Interpretation: No change → No reward
+
+Why This Reward Function Works
+✅ Advantages
+Direct alignment with goal: Lower variance = less dissonance = goal state
+
+Naturally scaled: Percent-based, interpretable, comparable across states
+
+Prevents gaming: Can't artificially inflate then reduce for reward
+
+Encourages meaningful action: Zero reward for status quo
+
+Robust: Works across different dissonance levels and DAA variants
+
+Simple to implement: Clear formula, efficient computation
+
+Interpretable results: "Reduced variance by X%" is meaningful
+
+Testable: Can empirically validate that DRM learns to reduce variance
+
+✅ Alignment with Q1A Objectives
+Q1A Goal: Build DAA that recognizes dissonance as signal and actively develops reduction strategies
+
+This reward function:
+
+✅ Makes variance reduction the optimization target
+✅ Provides clear learning signal
+✅ Enables strategy discovery (any action that reduces variance is rewarded)
+✅ Maintains functional operation (no reward for breaking the system)
+Implementation Checklist
+For Q1A Prototype:
+ Implement tier_variance() function
+ Implement compute_reward() function
+ Test with example scenarios above
+ Validate rewards are in expected range [-1, 1] typically
+ Log variance before/after for each action
+ Track cumulative rewards over episodes
+ Monitor for reward hacking (unexpected exploits)
+Optional for Q1A:
+ Implement time penalty mechanism
+ Add configurable threshold parameter
+ Create visualization of variance over time
+ Add reward shaping if learning is too slow
+Reserved for Q1B+:
+ Multi-objective weights (accuracy, coherence)
+ Curriculum-based reward schedules
+ Adaptive threshold based on performance
+ Meta-learning reward adjustments
+Technical Notes
+Numerical Stability
+python
+# Always check for division by zero
+if var_before > 1e-6:
+    reward = (var_before - var_after) / var_before
+else:
+    reward = 0.0
+
+# Consider capping extreme values
+reward = np.clip(reward, -10.0, 1.0)  # Prevent infinite negative rewards
+Vectorization
+For efficiency with multiple DAAs or batch training:
+
+python
+def batch_tier_variance(anchors, actives, buffers):
+    """
+    Compute variance for batch of states.
+    
+    Args:
+        anchors: array of shape (batch_size, n_dimensions)
+        actives: array of shape (batch_size, n_dimensions)
+        buffers: array of shape (batch_size, n_dimensions)
+    
+    Returns:
+        array of shape (batch_size,): variance for each state
+    """
+    # Stack: shape (batch_size, 3, n_dimensions)
+    tiers = np.stack([anchors, actives, buffers], axis=1)
+    
+    # Variance across tiers (axis=1): shape (batch_size, n_dimensions)
+    var_per_dim = np.var(tiers, axis=1)
+    
+    # Mean across dimensions (axis=1): shape (batch_size,)
+    mean_var = np.mean(var_per_dim, axis=1)
+    
+    return mean_var
+Validation Tests
+Unit Tests
+python
+def test_zero_variance():
+    """All tiers aligned → variance = 0"""
+    anchor = active = buffer = np.array([5, 5, 5])
+    assert tier_variance(anchor, active, buffer) == 0.0
+
+def test_maximum_spread():
+    """Maximum divergence → high variance"""
+    anchor = np.array([10, 10, 10])
+    active = np.array([5, 5, 5])
+    buffer = np.array([0, 0, 0])
+    var = tier_variance(anchor, active, buffer)
+    assert var > 0  # Should be significantly positive
+
+def test_reward_improvement():
+    """Reducing variance → positive reward"""
+    var_before = 5.0
+    var_after = 3.0
+    reward = (var_before - var_after) / var_before
+    assert reward > 0
+    assert np.isclose(reward, 0.4)  # 40% improvement
+
+def test_reward_degradation():
+    """Increasing variance → negative reward"""
+    var_before = 3.0
+    var_after = 5.0
+    reward = (var_before - var_after) / var_before
+    assert reward < 0
+
+def test_reward_no_change():
+    """No variance change → zero reward"""
+    var_before = var_after = 4.0
+    reward = (var_before - var_after) / var_before
+    assert reward == 0.0
+Next Steps
+After Reward Function is Implemented:
+Define Action Space - What can DRM actually do?
+Choose RL Algorithm - PPO, SAC, or other
+Design State Representation - What information DRM observes
+Implement Training Loop - How DRM learns from rewards
+Create Evaluation Metrics - How to measure Q1A success
+References
+Conceptual Foundation:
+Multi-Objective Reinforcement Learning (Van Moffaert & Nowé, 2014)
+Intrinsic Motivation in RL (Oudeyer & Kaplan, 2007)
+Free Energy Principle (Friston, 2010)
+Implementation Guidance:
+Stable Baselines3 Documentation
+OpenAI Gym Environment Design
+RLlib Multi-Agent Framework
+Version History
+v1.0 (Current): Initial Q1A reward function specification
+Percent variance reduction as primary reward
+Optional time penalty for sustained dissonance
+Simple, testable implementation
+Contact & Collaboration
+This document is part of The Iron Giant Theorem research project:
+
+Repository: https://github.com/leeroyal-ctrl/The-Iron-Giant-Theorem
+Research Questions: Q1A - Building the Dissonance-Adaptive Agent
+Document Status: Ready for implementation in DAA1 prototype
+
+End of Document
+
+Claude Sonnet 4.5
+icon
+Tip: The model forgets context over long conversations.
+
