@@ -1,0 +1,297 @@
+Existing Systems That Could Serve as DRM or Be Adapted
+Let me survey what exists that might do this work:
+
+1. Multi-Objective Reinforcement Learning (MORL)
+What It Is:
+Agents that optimize multiple (often conflicting) objectives simultaneously.
+
+Relevant Work:
+Pareto Multi-Objective RL (Van Moffaert & Nowé, 2014)
+Scalarization methods (weighted sum of objectives)
+Evolutionary multi-objective optimization
+How It Maps to DRM:
+text
+Your DAA objectives:
+- Minimize dissonance (comfort)
+- Maintain accuracy (truth)
+- Preserve coherence (consistency)
+- Functional performance (capability)
+
+= Multi-objective RL problem
+Could This Work?
+✅ YES - Strong candidate
+
+Handles conflicting goals naturally
+Has learning mechanisms
+Explores strategy space
+Well-established algorithms
+❌ Limitations:
+
+Typically doesn't include metacognition about evidence quality
+No built-in notion of "immutable anchor"
+Would need adaptation for 3-tier worldview structure
+Verdict: Strong foundation to build on
+
+2. Active Inference / Free Energy Principle
+What It Is:
+Framework where agents minimize "surprise" (prediction error) through action and belief updating.
+
+Relevant Work:
+Karl Friston's Free Energy Principle
+Active inference agents (Da Costa et al., 2020)
+Computational psychiatry models
+How It Maps to DRM:
+text
+Dissonance = Prediction error / Free energy
+DRM actions = Minimize free energy through:
+  - Updating beliefs (perceptual inference)
+  - Taking actions (active inference)
+  - Changing precision (attention)
+Could This Work?
+✅ YES - Theoretically elegant
+
+Unified framework for perception and action
+Dissonance naturally maps to free energy
+Mathematically rigorous
+Connects to neuroscience
+❌ Limitations:
+
+Computationally complex
+Requires sophisticated probability distributions
+Learning mechanisms less clear than RL
+Your "immutable anchor" doesn't fit naturally (violates the update-all-beliefs assumption)
+Verdict: Theoretically beautiful but implementation heavy
+
+3. Belief Revision Systems (Symbolic AI)
+What It Is:
+Formal systems for updating beliefs when new information conflicts with existing beliefs.
+
+Relevant Work:
+AGM Theory (Alchourrón, Gärdenfors, Makinson)
+Truth Maintenance Systems (TMS)
+Non-monotonic reasoning systems
+How It Maps to DRM:
+text
+Your 3-tier worldview = Belief base with priorities
+Anchor = Highest priority beliefs (never revised)
+Active = Medium priority (revised reluctantly)
+Buffer = Lowest priority (revised readily)
+
+DRM = Belief revision engine
+Could This Work?
+✅ MAYBE - For symbolic/logical worldviews
+
+Formal guarantees about consistency
+Well-defined revision operators
+Handles prioritized beliefs
+Clear semantics
+❌ Limitations:
+
+Assumes logical/propositional beliefs (your dimensions are continuous 0-10)
+No learning mechanism (rules are fixed)
+No notion of "dissonance reduction via creation"
+Very different from neural/statistical approaches
+Verdict: Wrong paradigm unless you go fully symbolic
+
+4. Constraint Satisfaction / Optimization
+What It Is:
+Systems that find solutions satisfying multiple constraints, often with soft constraints that can be violated with penalties.
+
+Relevant Work:
+Weighted Constraint Satisfaction Problems (WCSP)
+Hierarchical constraint systems
+Constraint optimization with preferences
+How It Maps to DRM:
+text
+Constraints:
+- Hard: Anchor must not change
+- Soft: Buffer should match observations (weight W1)
+- Soft: Active should match Buffer (weight W2)
+- Soft: All tiers should be coherent (weight W3)
+
+DRM = Constraint satisfaction engine
+Could This Work?
+✅ MAYBE - For static optimization
+
+Handles hierarchical constraints naturally
+Can optimize across multiple objectives
+Well-studied algorithms (simulated annealing, etc.)
+❌ Limitations:
+
+Not inherently learning-based (finds solutions, doesn't learn)
+No notion of strategy discovery
+Typically one-shot optimization, not ongoing adaptation
+No action/behavior generation
+Verdict: Good for computing target states, not for behavioral strategies
+
+5. Meta-Reinforcement Learning
+What It Is:
+RL agents that learn learning strategies - learning how to learn.
+
+Relevant Work:
+Model-Agnostic Meta-Learning (MAML)
+Meta-RL for fast adaptation (Wang et al., 2016)
+Learning to optimize (Chen et al., 2017)
+How It Maps to DRM:
+text
+Inner loop: DAA learns from experiences, dissonance accumulates
+Outer loop: DRM learns which resolution strategies work across episodes
+
+Meta-objective: Learn to reduce dissonance efficiently
+Could This Work?
+✅ YES - For strategy learning
+
+Explicitly learns strategies
+Can discover what works across different situations
+Generalizes to new dissonance patterns
+❌ Limitations:
+
+Very data-hungry (needs many episodes)
+Computationally expensive
+Requires careful curriculum design
+May be overkill for Q1A
+Verdict: Interesting for later stages, probably too complex for Q1A
+
+6. Cognitive Architectures (SOAR, ACT-R, CLARION)
+What It Is:
+Comprehensive models of human cognition with perception, memory, learning, and action.
+
+Relevant Work:
+SOAR (Laird, 2012) - problem-solving via operator selection
+ACT-R (Anderson, 2007) - production rules + subsymbolic activation
+CLARION (Sun, 2006) - dual-process (implicit/explicit) learning
+How It Maps to DRM:
+text
+Your DAA = Cognitive architecture with:
+- Declarative memory: Worldview (3 tiers)
+- Affective system: ASM
+- Production system: DRM (if-then rules)
+- Learning: Discovers new productions
+Could This Work?
+✅ MAYBE - If you want full cognitive model
+
+Comprehensive and psychologically grounded
+Includes learning mechanisms
+Has goal management
+Well-tested on complex tasks
+❌ Limitations:
+
+HUGE overhead (entire cognitive architecture)
+Steep learning curve
+May impose assumptions incompatible with your design
+Overkill for focused DRM needs
+Verdict: Too heavyweight unless you're building full cognitive model
+
+7. Intrinsic Motivation / Curiosity-Driven RL
+What It Is:
+RL agents with internal reward signals (not just external) based on novelty, learning progress, or competence.
+
+Relevant Work:
+Curiosity-driven exploration (Pathak et al., 2017)
+Empowerment (Salge et al., 2014)
+Information gain maximization
+How It Maps to DRM:
+text
+Intrinsic reward = -dissonance (want to minimize)
+
+Agent explores actions that reduce internal tension
+Rather than maximizing external reward
+Could This Work?
+✅ YES - Good conceptual fit
+
+Internal motivation signal = dissonance
+Agent learns to satisfy internal drive
+Explores strategy space
+❌ Limitations:
+
+Typically focused on exploration (not resolution)
+May need modification to handle your multi-tier worldview
+Less work on "dissonance" specifically vs novelty/learning progress
+Verdict: Promising, especially combined with MORL
+
+8. Emotion Regulation Models (Computational Affective Science)
+What It Is:
+Computational models of how agents regulate emotional states.
+
+Relevant Work:
+Gross's Process Model of Emotion Regulation (computational implementations)
+Emotion-aware reinforcement learning (Broekens & Chetouani, 2021)
+Affective computing architectures (Picard, Marsella)
+How It Maps to DRM:
+text
+Dissonance = Negative affective state
+DRM = Emotion regulation system
+
+Strategies:
+- Situation selection (avoid dissonant experiences)
+- Cognitive reappraisal (reinterpret)
+- Belief adjustment (update worldview)
+- Expression (creative externalization)
+Could This Work?
+✅ YES - Very relevant framing
+
+Dissonance AS emotional/affective state
+Well-studied regulation strategies
+Connects to your ASM naturally
+❌ Limitations:
+
+Less work on computational implementations
+Often descriptive models, not algorithmic
+Would need substantial implementation work
+Verdict: Excellent conceptual foundation, needs engineering
+
+My Recommendation:
+Best Approach: Hybrid System
+Foundation: Multi-Objective Reinforcement Learning (MORL)
+
+Handles conflicting objectives (dissonance vs accuracy vs coherence)
+Learning mechanism built-in
+Well-established algorithms
++ Intrinsic Motivation Framework
+
+Dissonance as intrinsic reward signal
+Internal drive for resolution
++ Emotion Regulation Strategies
+
+Conceptual framework for what actions DRM can take
+Categorization of resolution strategies (reappraisal, expression, etc.)
++ Constraint System for Anchor
+
+Hard constraint: Anchor tier cannot be modified
+Ensures immutability
+Concrete Starting Point for DAA1 DRM:
+I Recommend:
+Algorithm Base:
+
+Soft Actor-Critic (SAC) or PPO (Proximal Policy Optimization)
+Standard MORL algorithms, widely used, stable
+Modifications:
+
+Multi-objective reward function (dissonance, accuracy, coherence)
+Action space constrained (can't modify Anchor)
+Intrinsic reward = -dissonance (from ASM)
+Action Space:
+
+Adjust Active tier positions (within limits)
+Adjust Buffer tier learning rate
+Request more information (if available)
+[Later: Generate creative output]
+This gives you:
+
+✅ Proven learning algorithm
+✅ Handles multiple objectives
+✅ Can discover strategies
+✅ Relatively straightforward to implement
+✅ Standard ML tools available (PyTorch, TensorFlow)
+Questions Before We Proceed:
+Do you want to use RL-based approach (MORL)? Or prefer something else from above?
+
+Implementation constraints: Are you coding from scratch, using frameworks (Stable Baselines, RLlib), or want highest-level tools?
+
+Symbolic vs Neural: Do you want worldview as continuous vectors (neural) or discrete symbols (symbolic logic)?
+
+Complexity tolerance: Simple and working quickly? Or sophisticated but slower to develop?
+
+Tell me your preferences and I'll help design the specific DRM architecture.
+
+Claude Sonnet 4.5
