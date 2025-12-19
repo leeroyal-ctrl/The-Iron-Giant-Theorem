@@ -1,0 +1,12 @@
+[ Raw systems / data ]
+        ↓
+[ Canonical representation ]
+  (entities, dependencies, flows, vectors)
+        ↓
+[ Indexing / graph / embeddings ]
+        ↓
+[ Pattern queries ]
+        ↓
+[ Actions / triggers ]
+
+-GPT 5.2
