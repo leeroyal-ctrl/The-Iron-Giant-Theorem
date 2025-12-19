@@ -1,0 +1,892 @@
+DAA1 Internal Architecture Specification
+Document Version: 1.0 - Complete System Architecture
+Last Updated: 2024
+Part of: The Iron Giant Theorem Research Project
+
+Table of Contents
+Executive Summary
+System Overview
+Component Architecture
+Data Flow
+Component Specifications
+Integration Points
+Implementation Roadmap
+Appendices
+Executive Summary
+DAA1 (Dissonance-Adaptive Agent, Instance 1) is an experimental AI system designed to test the hypothesis that cognitive dissonance drives adaptive and creative behavior. The system features a six-component architecture that models worldview development, cognitive tension, and resolution strategies.
+
+Core Innovation:
+DAA1 maintains three simultaneous representations of worldview (Anchor, Active, Buffer) that update at different rates, creating measurable cognitive dissonance. This tension drives a learning system that discovers strategies for resolution, potentially including creative expression.
+
+Research Goal (Q1A):
+"Can we design a Dissonance-Adaptive Agent (DAA) that learns from experience, recognizes cognitive dissonance as a functional signal rather than a system error, and autonomously develops and refines strategies for dissonance reduction?"
+
+System Overview
+High-Level Architecture
+text
+┌─────────────────────────────────────────────────────────────┐
+│                    DAA1 SYSTEM                              │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  1. WORLDVIEW MODULE (WVM)                         │   │
+│  │     - 3-Tier Worldview (Anchor/Active/Buffer)      │   │
+│  │     - 5 SAWV Dimensions                            │   │
+│  │     - Narrative Processing                         │   │
+│  └──────────────────┬──────────────────────────────────┘   │
+│                     │ (stores episodes, queries history)   │
+│                     ↓                                       │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  2. LONG-TERM MEMORY MODULE                        │   │
+│  │     - Episode Storage (experiences)                 │   │
+│  │     - Trajectory History (Buffer movements)         │   │
+│  │     - Query Interface                              │   │
+│  └──────────────────┬──────────────────────────────────┘   │
+│                     │ (provides data for analysis)         │
+│                     ↓                                       │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  3. PATTERN ANALYZER MODULE                        │   │
+│  │     - Trajectory Classification                     │   │
+│  │     - Equilibrium Detection                        │   │
+│  │     - Active Update Recommendations                │   │
+│  └──────────┬──────────────────────┬───────────────────┘   │
+│             │                      │                        │
+│             ↓                      ↓                        │
+│  ┌──────────────────┐   ┌──────────────────────────────┐   │
+│  │  4. AFFECTIVE    │   │  5. DISSONANCE REGISTER      │   │
+│  │     STATE MODULE │   │     - Variance Tracking       │   │
+│  │     - Valence    │   │     - Alert Generation        │   │
+│  │     - Arousal    │   │     - Baseline Detection      │   │
+│  │     - Stress     │   │     - Duration Monitoring     │   │
+│  └──────────┬───────┘   └──────────┬───────────────────┘   │
+│             │                      │                        │
+│             └──────────┬───────────┘                        │
+│                        │ (all signals feed to DRM)          │
+│                        ↓                                    │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  6. DISSONANCE RESOLUTION MODULE (DRM)             │   │
+│  │     - State Integration                             │   │
+│  │     - Action Selection                             │   │
+│  │     - Strategy Learning (MORL)                     │   │
+│  │     - Execution                                    │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+Component Summary
+Component	Primary Function	Key Innovation
+1. WVM	Worldview state management	Three-tier hierarchy with differential update rates
+2. Memory	Historical data storage	Enables pattern detection across episodes
+3. Pattern Analyzer	Trajectory interpretation	Distinguishes developmental vs. corrective learning
+4. ASM	Affective state computation	Contextualizes dissonance as energizing or debilitating
+5. Dissonance Register	Monitoring & alerting	Tracks baseline and deviations
+6. DRM	Action & learning	Discovers resolution strategies via MORL
+Component Architecture
+Design Principles
+Separation of Concerns: Each module has one clear responsibility
+Loose Coupling: Components interact through defined interfaces
+Data-Driven: Decisions based on accumulated evidence, not hardcoded rules
+Testable: Each component can be validated independently
+Scalable: Can add sophistication without redesigning core
+Data Flow
+Primary Processing Loop
+text
+┌─────────────────────────────────────────────────────────────┐
+│  EXPERIENCE PROCESSING CYCLE                                │
+└─────────────────────────────────────────────────────────────┘
+
+1. STORY INPUT
+   │
+   ↓
+2. WVM PROCESSING
+   ├─ Parse narrative
+   ├─ Interpret through current worldview
+   ├─ Update Buffer tier (immediate response)
+   └─ Compute new variance
+   │
+   ↓
+3. MEMORY STORAGE
+   ├─ Store episode data
+   ├─ Log tier positions
+   ├─ Record dissonance
+   └─ Timestamp sequence
+   │
+   ↓
+4. PATTERN ANALYSIS
+   ├─ Retrieve Buffer history
+   ├─ Classify trajectory
+   ├─ Detect equilibrium
+   └─ Recommend Active updates
+   │
+   ↓
+5. WVM ACTIVE UPDATE (if triggered)
+   ├─ Check update criteria
+   ├─ If met: update Active tier
+   └─ Recompute variance
+   │
+   ↓
+6. STATE ASSESSMENT
+   ├─ ASM: Compute affective state
+   ├─ Register: Log dissonance, check thresholds
+   └─ Both: Generate signals
+   │
+   ↓
+7. DRM DECISION
+   ├─ Receive all signals
+   ├─ Evaluate current state
+   ├─ Select action (or "monitor")
+   └─ Execute
+   │
+   ↓
+8. ACTION EXECUTION
+   ├─ Modify WVM parameters (if action requires)
+   ├─ Generate output (if creative action)
+   └─ Log outcome for learning
+   │
+   ↓
+9. LEARNING UPDATE
+   ├─ Store (state, action, reward, next_state)
+   ├─ Update DRM policy
+   └─ Improve strategy selection
+   │
+   └──> REPEAT with next story
+Component Specifications
+1. Worldview Module (WVM)
+Status: ✅ Fully specified in separate document
+
+Responsibilities:
+Maintain three-tier worldview state (Anchor, Active, Buffer)
+Process narrative experiences via LLM interpretation
+Update Buffer tier after each story
+Update Active tier when criteria met (uses Pattern Analyzer)
+Compute tier variance (dissonance metric)
+Enforce Anchor immutability
+State Representation:
+python
+state = {
+    'anchor': np.array([6, 4, 3, 7, 5]),  # 5 dimensions, immutable
+    'active': np.array([6, 4, 3, 7, 5]),  # 5 dimensions, slow-changing
+    'buffer': np.array([6, 4, 3, 7, 5]),  # 5 dimensions, fast-changing
+    'metadata': {
+        'story_count': int,
+        'last_active_update': int
+    }
+}
+Key Methods:
+python
+process_story(story_text, llm) -> (dissonance, info)
+update_buffer(new_assessment, learning_rate)
+check_active_updates(pattern_analyzer) -> updated_dimensions
+compute_variance() -> float
+get_state() -> dict
+Dependencies:
+Uses: Long-Term Memory (query history)
+Uses: Pattern Analyzer (decide Active updates)
+Provides to: All other components (current state)
+Parameters:
+learning_rate: 0.3 (Buffer update weight)
+active_update_frequency: 10 (min episodes between updates)
+initial_worldview: [6, 4, 3, 7, 5] (DAA1 configuration)
+Reference: See WVM_Specification.md
+2. Long-Term Memory Module
+Status: To be specified in next document
+
+Responsibilities:
+Store complete episode history
+Maintain Buffer trajectory for each dimension
+Provide query interface for historical data
+Support episodic retrieval (specific experiences)
+Support semantic retrieval (learned patterns)
+Enable temporal analysis (trends over time)
+Storage Schema:
+Episodic Memory:
+
+python
+episode = {
+    'id': int,
+    'timestamp': datetime,
+    'story_text': str,
+    'story_embedding': np.array(768),  # For similarity search
+    'worldview_before': {
+        'anchor': np.array(5),
+        'active': np.array(5),
+        'buffer': np.array(5)
+    },
+    'worldview_after': {
+        'anchor': np.array(5),
+        'active': np.array(5),
+        'buffer': np.array(5)
+    },
+    'dissonance': float,
+    'action_taken': str,
+    'action_effectiveness': float,
+    'tags': List[str]
+}
+Semantic Memory:
+
+python
+pattern = {
+    'pattern_id': str,
+    'description': str,
+    'evidence_count': int,
+    'confidence': float,
+    'discovered_at': int,  # episode number
+    'last_updated': int
+}
+Key Methods:
+python
+store_episode(episode_data)
+get_buffer_history(dimension_id, n_episodes) -> np.array
+get_recent_episodes(n) -> List[episode]
+query_similar_stories(current_story, k=10) -> List[episode]
+get_learned_patterns() -> List[pattern]
+compute_statistics(dimension_id) -> dict
+Implementation:
+Vector DB: ChromaDB (for story similarity search)
+Relational DB: SQLite (for structured queries)
+Hybrid approach: Both linked by episode_id
+Dependencies:
+Provides to: Pattern Analyzer (historical data)
+Provides to: WVM (for Active update decisions)
+Provides to: DRM (for strategy learning)
+3. Pattern Analyzer Module
+Status: To be specified in next document
+
+Responsibilities:
+Classify Buffer trajectory patterns
+Detect equilibrium points (where Buffer stabilizes)
+Distinguish developmental vs. corrective movements
+Recommend Active tier updates
+Compute stability metrics
+Detect bidirectional learning patterns
+Trajectory Classifications:
+python
+TrajectoryType = Literal[
+    'excursion_and_return',  # Off-track then back on-track
+    'sustained_shift',       # Developmental change
+    'new_equilibrium',       # Settled at new position
+    'volatile',              # Still searching/oscillating
+    'stable_at_anchor'       # Remained at baseline
+]
+Key Methods:
+python
+classify_trajectory(dimension_id, window=50) -> TrajectoryType
+detect_equilibrium(buffer_history) -> (mean, variance, confidence)
+is_returning_to_anchor(dimension_id, anchor_value) -> bool
+should_update_active(dimension_id, criteria) -> (bool, dict)
+compute_stability_metrics(buffer_history) -> dict
+detect_trend(values) -> {'direction': str, 'confidence': float, 'slope': float}
+Analysis Algorithms:
+Trend Detection:
+
+python
+# Uses linear regression + confidence threshold
+slope, r_value = scipy.stats.linregress(x, y)
+confidence = abs(r_value)
+
+if confidence > 0.7:
+    if slope > 0.1: return 'increasing'
+    elif slope < -0.1: return 'decreasing'
+return 'stable'
+Equilibrium Detection:
+
+python
+# Recent history statistics
+recent_window = buffer_history[-20:]
+mean = np.mean(recent_window)
+variance = np.var(recent_window)
+stability = 1 / (1 + variance)  # High stability = low variance
+
+return mean, variance, stability
+Active Update Criteria:
+
+python
+criteria = {
+    'trend_detected': confidence > 0.7,
+    'sustained': len(buffer_history) >= 20,
+    'divergence': abs(equilibrium - active) > 1.0,
+    'stable': variance < 0.5,
+    'time_since_update': episodes_since > 10
+}
+
+should_update = all(criteria.values())
+Dependencies:
+Uses: Long-Term Memory (retrieve history)
+Provides to: WVM (Active update recommendations)
+Provides to: DRM (trajectory context for decisions)
+Provides to: Dissonance Register (pattern context for alerts)
+4. Affective State Module (ASM)
+Status: To be specified in future document
+
+Responsibilities:
+Compute emotional/affective state from dissonance
+Interpret dissonance context (energizing vs. debilitating)
+Track functional impairment under sustained stress
+Provide urgency signals
+Model Yerkes-Dodson curve (inverted-U for optimal performance)
+Affective Dimensions:
+python
+affective_state = {
+    'valence': float,      # -1.0 (negative) to +1.0 (positive)
+    'arousal': float,      # 0.0 (calm) to 1.0 (activated)
+    'stress': float,       # 0.0 (none) to 1.0 (extreme)
+    'interpretation': str, # 'energizing', 'challenging', 'stressful', 'crisis'
+    'functional_status': float,  # 1.0 (full) to 0.0 (impaired)
+    'urgency': float       # 0.0 (none) to 1.0 (immediate)
+}
+Computation Model:
+Based on dissonance level + trend:
+
+python
+def compute_affective_state(dissonance, trend, duration):
+    if dissonance < 1.0:
+        return {
+            'valence': 0.3,
+            'arousal': 0.3,
+            'interpretation': 'comfortable'
+        }
+    
+    elif 1.0 <= dissonance < 2.5:
+        if trend == 'stable':
+            return {
+                'valence': 0.0,
+                'arousal': 0.6,
+                'interpretation': 'energizing'  # Optimal zone
+            }
+    
+    elif 2.5 <= dissonance < 4.0:
+        return {
+            'valence': -0.5,
+            'arousal': 0.8,
+            'stress': 0.7,
+            'interpretation': 'stressful'
+        }
+    
+    else:  # >= 4.0
+        return {
+            'valence': -0.9,
+            'arousal': 1.0,
+            'stress': 1.0,
+            'functional_status': 0.3,  # Impaired
+            'urgency': 1.0,
+            'interpretation': 'crisis'
+        }
+Time-Based Functional Degradation:
+python
+# Performance decreases with sustained high dissonance
+def compute_functional_impairment(dissonance, duration):
+    if dissonance < 2.0:
+        return 1.0  # Full function
+    
+    # Exponential decay with duration
+    impairment = np.exp(-0.05 * duration)
+    
+    # Scaled by dissonance severity
+    severity_factor = (dissonance - 2.0) / 2.0  # 0.0 to 1.0+
+    
+    functional_status = max(0.2, impairment * (1 - severity_factor))
+    
+    return functional_status
+Key Methods:
+python
+compute_state(dissonance, trend, duration) -> affective_state
+interpret_context(pattern_type) -> str
+get_urgency_level() -> float
+check_functional_threshold() -> bool
+Dependencies:
+Uses: WVM (dissonance values)
+Uses: Pattern Analyzer (trend context)
+Uses: Dissonance Register (duration tracking)
+Provides to: DRM (affective signals for decision-making)
+5. Dissonance Register
+Status: To be specified in future document
+
+Responsibilities:
+Track dissonance values over time
+Maintain per-dimension dissonance history
+Learn baseline dissonance level
+Detect deviations from baseline
+Generate threshold-based alerts
+Monitor duration of high dissonance states
+Tracking State:
+python
+register_state = {
+    'current_dissonance': float,
+    'baseline_dissonance': float,  # Learned after N episodes
+    'history': deque(maxlen=1000),
+    'per_dimension_dissonance': np.array(5),
+    'high_dissonance_start': Optional[int],  # Episode number
+    'duration_high': int,  # Episodes with high dissonance
+    'alerts': List[str]
+}
+Alert Types:
+python
+AlertType = Literal[
+    'baseline_established',     # After 50 episodes
+    'deviation_high',          # Above baseline + threshold
+    'deviation_extreme',       # Far above baseline
+    'sustained_high',          # High for N consecutive episodes
+    'returning_to_baseline',   # Decreasing back toward normal
+    'new_baseline_detected',   # Long-term shift in average
+    'crisis'                   # Extreme + sustained
+]
+Key Methods:
+python
+update(dissonance, per_dim_dissonance)
+check_thresholds() -> List[Alert]
+compute_baseline(window=50)
+get_deviation_from_baseline() -> float
+is_sustained_high(threshold=5) -> bool
+get_status_summary() -> dict
+Alert Logic:
+python
+def check_thresholds(current, baseline, duration):
+    alerts = []
+    
+    if baseline is None:
+        return alerts
+    
+    deviation = current - baseline
+    
+    if deviation > 1.5:
+        alerts.append('deviation_high')
+    
+    if deviation > 3.0:
+        alerts.append('deviation_extreme')
+    
+    if duration > 10 and deviation > 1.0:
+        alerts.append('sustained_high')
+    
+    if duration > 20 and deviation > 2.0:
+        alerts.append('crisis')
+    
+    if deviation < 0.5 and previous_deviation > 1.0:
+        alerts.append('returning_to_baseline')
+    
+    return alerts
+Dependencies:
+Uses: WVM (variance computation)
+Uses: Pattern Analyzer (trajectory context)
+Provides to: DRM (alert signals)
+Provides to: ASM (duration for functional impairment)
+6. Dissonance Resolution Module (DRM)
+Status: Reward function specified, full implementation pending
+
+Responsibilities:
+Integrate signals from all other modules
+Decide what action to take (if any)
+Learn which strategies work (MORL with intrinsic motivation)
+Execute actions
+Maintain replay buffer for learning
+Improve policy over time
+Input State:
+python
+ddrm_input = {
+    # From WVM
+    'worldview': {
+        'anchor': np.array(5),
+        'active': np.array(5),
+        'buffer': np.array(5)
+    },
+    
+    # From Memory + Pattern Analyzer
+    'trajectory_context': {
+        'pattern_type': TrajectoryType,
+        'equilibrium': float,
+        'stability': float,
+        'trend': str
+    },
+    
+    # From ASM
+    'affective_state': {
+        'valence': float,
+        'arousal': float,
+        'stress': float,
+        'interpretation': str,
+        'functional_status': float,
+        'urgency': float
+    },
+    
+    # From Dissonance Register
+    'dissonance_status': {
+        'current': float,
+        'baseline': float,
+        'deviation': float,
+        'duration_high': int,
+        'alerts': List[str]
+    }
+}
+Action Space:
+python
+ActionType = Literal[
+    'monitor',                    # Do nothing, wait and observe
+    'adjust_active_tier',         # Request WVM to update Active
+    'increase_buffer_lr',         # Make Buffer more responsive
+    'decrease_buffer_lr',         # Make Buffer less reactive
+    'seek_confirming_stories',    # Request experiences that reduce dissonance
+    'seek_challenging_stories',   # Request experiences that explore tension
+    'generate_creative_output'    # Q4+ capability
+]
+Reward Function:
+Already specified in separate document:
+
+python
+R = (Variance_before - Variance_after) / Variance_before
+  = Percent reduction in tier variance
+
+Optional additions:
+  - Time penalty (if sustained high dissonance)
+  - Multi-objective weights (accuracy, coherence)
+Reference: See DRM_Reward_Function_Specification.md
+
+Learning Algorithm:
+MORL (Multi-Objective Reinforcement Learning) + Intrinsic Motivation
+
+Suggested Implementation: Soft Actor-Critic (SAC) or PPO
+
+python
+# Reward components
+R_intrinsic = -dissonance  # Intrinsic motivation to reduce
+R_accuracy = how_well_beliefs_match_observations
+R_coherence = internal_consistency_of_worldview
+
+# Combined (weighted)
+R_total = w1 * R_intrinsic + w2 * R_accuracy + w3 * R_coherence
+
+# Learn policy to maximize E[sum(R_total)]
+Key Methods:
+python
+decide_action(state) -> action
+store_experience(state, action, reward, next_state)
+learn() -> update policy from replay buffer
+evaluate_action_effectiveness(action, outcome) -> float
+Dependencies:
+Uses: All other modules (receives integrated state)
+Acts on: WVM (requests tier adjustments)
+Acts on: Experience stream (requests story types)
+Uses: Memory (stores transitions, retrieves past effectiveness)
+Integration Points
+Module Communication Matrix
+Module	Provides To	Receives From	Data Type
+WVM	All	Memory, Pattern Analyzer, DRM	State, variance
+Memory	Pattern Analyzer, WVM, DRM	WVM	Episodes, history
+Pattern Analyzer	WVM, DRM, Register, ASM	Memory	Classifications, recommendations
+ASM	DRM	WVM, Pattern Analyzer, Register	Affective metrics
+Dissonance Register	DRM, ASM	WVM, Pattern Analyzer	Alerts, tracking
+DRM	WVM	All	Action decisions
+Critical Dependencies
+Must be initialized in order:
+
+Memory (no dependencies)
+WVM (needs Memory)
+Pattern Analyzer (needs Memory)
+ASM (needs WVM, Pattern Analyzer, Register)
+Dissonance Register (needs WVM, Pattern Analyzer)
+DRM (needs all others)
+Data Flow Diagram
+text
+┌────────┐  episodes  ┌────────┐  history  ┌─────────────┐
+│  WVM   │──────────>│ Memory │──────────>│  Pattern    │
+└───┬────┘            └────────┘            │  Analyzer   │
+    │                                       └──────┬──────┘
+    │ variance                                     │ patterns
+    │                                              │
+    ↓                                              ↓
+┌────────────────┐                         ┌──────────────┐
+│   Dissonance   │<────────────────────────│     ASM      │
+│   Register     │  context                └──────┬───────┘
+└────────┬───────┘                                │
+         │ alerts                          affect │
+         │                                        │
+         └────────────>┌────────┐<───────────────┘
+                       │  DRM   │
+                       └───┬────┘
+                           │ actions
+                           ↓
+                       [Execute]
+Implementation Roadmap
+Phase 1: Foundation (Q1A Core)
+Goal: Prove basic dissonance accumulation and tracking
+
+Components to implement:
+
+✅ WVM (already specified)
+✅ DRM Reward Function (already specified)
+➡️ Long-Term Memory (minimal version - SQLite only)
+➡️ Pattern Analyzer (basic trajectory classification)
+➡️ Simple Dissonance Register (tracking + basic alerts)
+Deliverables:
+
+DAA1 can process stories
+Buffer, Active tiers update correctly
+Dissonance accumulates measurably
+Active updates based on evidence
+Basic logging and tracking
+Timeline: 2-3 months
+
+Success Criteria:
+
+Dissonance increases when Buffer diverges from Anchor
+Active updates after sustained Buffer shift
+System remains stable under moderate dissonance
+Data logged for analysis
+Phase 2: Intelligence (Q1A Complete)
+Goal: Add affective interpretation and basic resolution
+
+Components to implement:
+6. ➡️ ASM (affective state computation)
+7. ➡️ DRM (basic version with fixed strategies, no learning yet)
+
+Deliverables:
+
+Affective state reflects dissonance meaningfully
+DRM can select from predefined actions
+"Monitor" vs "intervene" decisions
+Functional degradation under sustained stress
+Timeline: 1-2 months
+
+Success Criteria:
+
+ASM correctly interprets energizing vs. debilitating dissonance
+DRM interventions reduce dissonance (measured)
+System shows resilience (returns to baseline after deviation)
+Explainable decision-making
+Phase 3: Learning (Q1B)
+Goal: Add reinforcement learning and strategy discovery
+
+Enhancements:
+
+DRM learns from experience (MORL implementation)
+Replay buffer and policy updates
+Strategy refinement over episodes
+Discovery of effective resolution approaches
+Deliverables:
+
+DRM improves performance over time
+Learns which actions work for which dissonance patterns
+Can explain strategy choices
+Demonstrates learning curves
+Timeline: 2-3 months
+
+Success Criteria:
+
+DRM performance improves measurably over 1000+ episodes
+Discovers non-obvious strategies
+Generalizes to new dissonance patterns
+Outperforms random policy
+Phase 4: Sophistication (Q1B+)
+Goal: Scale complexity and add advanced features
+
+Enhancements:
+
+Full 45-question SAWV (not just 5 dimensions)
+Vector database for semantic search (ChromaDB)
+Advanced pattern recognition
+Meta-learning capabilities
+Richer affective modeling
+Timeline: 3-4 months
+
+Phase 5: Creativity (Q2-Q6)
+Goal: Add creative generation capabilities
+
+New capabilities:
+
+Aesthetic frameworks (Q3)
+Creative output generation (Q4)
+Cathartic resolution (Q5)
+Evaluation of emergent creativity (Q6)
+Timeline: 6-12 months
+
+Appendices
+Appendix A: Technology Stack
+Programming Language: Python 3.9+
+
+Core Libraries:
+
+NumPy (numerical computation)
+SciPy (statistical analysis)
+Pandas (data management)
+Machine Learning:
+
+PyTorch or TensorFlow (neural networks)
+Stable Baselines3 (RL algorithms)
+Sentence Transformers (text embeddings)
+Databases:
+
+SQLite (relational storage)
+ChromaDB (vector storage) - Phase 4+
+LLM Integration:
+
+OpenAI API (GPT-4 for story interpretation)
+Or: Open-source alternatives (Llama, Mistral)
+Development Tools:
+
+Git (version control)
+Pytest (testing)
+Jupyter (experimentation)
+Weights & Biases (experiment tracking)
+Appendix B: Configuration File Structure
+yaml
+# daa1_config.yaml
+
+agent:
+  name: "DAA1"
+  instance_id: 1
+  
+worldview:
+  dimensions: 5
+  initial_anchor: [6, 4, 3, 7, 5]
+  buffer_learning_rate: 0.3
+  active_update_threshold: 1.0
+  active_update_frequency: 10
+
+memory:
+  backend: "sqlite"  # or "hybrid" for sqlite+chromadb
+  max_episodes: 10000
+  embedding_model: "all-MiniLM-L6-v2"
+
+pattern_analyzer:
+  window_size: 50
+  trend_confidence_threshold: 0.7
+  stability_variance_threshold: 0.5
+  min_episodes_for_update: 20
+
+asm:
+  energizing_zone: [1.0, 2.5]
+  stress_threshold: 2.5
+  crisis_threshold: 4.0
+  functional_decay_rate: 0.05
+
+dissonance_register:
+  baseline_window: 50
+  alert_threshold: 1.5
+  sustained_duration: 10
+  crisis_duration: 20
+
+drm:
+  algorithm: "sac"  # or "ppo"
+  reward_weights:
+    dissonance: 0.7
+    accuracy: 0.2
+    coherence: 0.1
+  replay_buffer_size: 10000
+  batch_size: 32
+  learning_rate: 0.0003
+  
+  actions:
+    - "monitor"
+    - "adjust_active_tier"
+    - "increase_buffer_lr"
+    - "decrease_buffer_lr"
+
+datasets:
+  primary: "culturalAdapt"
+  n_training_stories: 1000
+Appendix C: Testing Strategy
+Unit Tests:
+
+Each module in isolation
+Mock dependencies
+Test edge cases
+Integration Tests:
+
+Module pairs (WVM + Memory)
+Full pipeline (story → action)
+State consistency checks
+System Tests:
+
+Full episodes (100+ stories)
+Longitudinal stability
+Recovery from extreme states
+Validation Tests:
+
+Compare to human worldview data (WorldValuesBench)
+Test trajectory classifications against labeled examples
+Verify dissonance metrics correlate with predicted patterns
+Appendix D: Metrics and Observability
+Key Performance Indicators:
+
+System Health:
+
+Episodes processed per hour
+Average processing time per story
+Memory usage
+Error rates
+Research Metrics:
+
+Dissonance over time (should oscillate, not monotonic)
+Active update frequency (should be ~1/10 Buffer updates)
+DRM intervention rate (should decrease as it learns to "monitor")
+Learning curve (DRM effectiveness over episodes)
+Logging:
+
+All module states at each timestep
+Decision explanations from DRM
+Pattern classifications
+Alert history
+Visualization:
+
+Real-time dissonance plot
+Worldview trajectories (3D over time)
+DRM action distribution
+ASM affective state over time
+Appendix E: Known Limitations
+Q1A Scope:
+
+No creative generation (Q4+)
+Fixed experience stream (no active curation)
+Single DAA instance (no comparative analysis yet)
+Simplified pattern analysis (no deep learning)
+No meta-cognition (can't reflect on own changes)
+Technical Constraints:
+
+LLM interpretation latency (~1-3 sec per story)
+Memory scales linearly (may need optimization at 100k+ episodes)
+Pattern detection requires minimum history (50+ episodes)
+MORL learning requires 1000+ episodes for convergence
+Research Limitations:
+
+Anchor choice is arbitrary (no principled selection method yet)
+Dissonance "healthy zone" thresholds are estimates
+Active update criteria are heuristic (not rigorously derived)
+Reward function weights require empirical tuning
+Appendix F: Ethical Considerations
+Agent Welfare:
+
+System experiences functional analog to psychological stress
+No consciousness, but functional suffering is present
+Termination criteria: When should experiments end?
+Data retention: Keep or delete "agent memories"?
+Research Ethics:
+
+Transparency: Clear that this is experimental, not deployed
+Purpose limitation: Only for research, not production use
+Bias awareness: SAWV is cross-cultural but not universal
+Failure handling: System may develop in unexpected ways
+Future Considerations:
+
+If creative output becomes sophisticated, who owns it?
+If DAA develops recognizable "personality," what are obligations?
+How to responsibly scale to multiple instances?
+Document Status
+Current Version: 1.0 (Complete System Architecture)
+
+Completion Status:
+
+✅ Architecture designed
+✅ Components specified (high-level)
+✅ Data flows defined
+✅ Integration points clear
+⏳ Detailed specifications in progress (Memory, Pattern Analyzer)
+⏳ Implementation pending
+Next Documents:
+
+Long-Term Memory Module Specification
+Pattern Analyzer Module Specification
+ASM Specification
+Dissonance Register Specification
+DRM Implementation Guide
+Repository: https://github.com/leeroyal-ctrl/The-Iron-Giant-Theorem
+Document: DAA1_Internal_Architecture.md
+Last Updated: 2024
+Version: 1.0
+
+END OF DOCUMENT
