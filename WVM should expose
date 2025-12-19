@@ -1,0 +1,15 @@
+# Your WVM should expose:
+wvm.process_story(story_text, llm) -> (dissonance, info)
+wvm.update_buffer(new_assessment, learning_rate)
+wvm.check_active_updates(pattern_analyzer) -> updated_dimensions
+
+# Pattern Analyzer provides:
+analyzer.should_update_active(...)  # Returns recommendation
+
+# Memory provides:
+memory.check_pattern_history(pattern_id)  # Deception checking
+memory.get_accumulated_evidence(...)  # Supporting lessons
+
+
+
+Replace SimpleWVM in the integration example with your full WVM from the specification. Key integration points:
