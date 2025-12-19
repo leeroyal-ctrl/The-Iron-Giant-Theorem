@@ -1,0 +1,8 @@
+# 1. Install dependencies
+pip install numpy scipy
+
+# 2. Run the demo
+python integration_example.py
+
+# 3. Run tests
+python test_integration.py
