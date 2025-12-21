@@ -1,12 +1,12 @@
-# The-Iron-Giant-Theorem 
- Humans can design and build an artificial intelligence agent equipped for emergent creativity 
+# The-Iron-Giant-Theorem   Humans can design self-adjusting artifical inteligence 
 
-Named after the central theme of the 1999 film The Iron Giant. The Giant, a machine built for destruction, transcends its programming through experience and relationship, ultimately choosing a creative response to challenges.
-It is the principle behind developing a set of tools, Algorithms, methods and processes to test a theory of emergent creatvity by artifical inteligence
-
+Project: The DARA Project
+Prototype: DARA-1A (Dissonance Adjusting Response Agent, Generation 1, Instance A)
+Future Variants: DARA-1B, DARA-1C, DARA-1D
+ 
 We propose a Q-Based research path to test this theorem by answering these  Questions:
   
-Q1A: Can We build a DAA? Can we design a dissonance-Adaptive Agent (DAA) that: Learns from experience (updates internal states based on new information
+Q1A: Can We build a Dissoanace Adjusting Response Agent (DARA) that: Learns from experience (updates internal states based on new information
 
 Q1B: Can we train the DAA? Can we build an experience process by which a DAA can be exposed to cognitive dissonance and resonance?
 
