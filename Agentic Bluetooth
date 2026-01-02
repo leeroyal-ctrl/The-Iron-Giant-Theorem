@@ -1,0 +1,26 @@
+ AADL Protocol (AI Agent Decision Logging)
+Version 1.0
+
+Standard data format:
+- Decision ID
+- Timestamp
+- Agent identifier
+- Decision type
+- Input context
+- Options considered
+- Option chosen
+- Optimization function weights
+- Trade-offs made (what was deprioritized)
+- Confidence score
+- Outcome (if known)
+
+Standard API endpoints:
+- GET /decisions (query decision history)
+- GET /decisions/{id} (get specific decision details)
+- GET /optimization (current optimization function)
+- POST /feedback (provide outcome data)
+
+Standard metadata:
+- Agent capabilities
+- Optimization dimensions
+- Constraint parameters
