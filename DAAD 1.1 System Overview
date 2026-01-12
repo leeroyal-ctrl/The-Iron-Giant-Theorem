@@ -1,0 +1,75 @@
+text
+
+┌─────────────────────────────────────────────────────────────┐
+│                     DAAD 1.1 MIDDLEWARE                     │
+│   C-Suite Governance Tool for Multi-Agent AI Ecosystems     │
+└─────────────────────────────────┬───────────────────────────┘
+                                  │
+          ┌───────────────────────▼───────────────────────┐
+          │            AI AGENT DECISION FLOW             │
+          │  (7–10 black-box systems – Finance, Ops, HR)  │
+          └───────────────────────┬───────────────────────┘
+                                  │ (decision logs → API)
+                                  ▼
+┌─────────────────────────────────────────────────────────────┐
+│        1. INGESTION LAYER                                   │
+│   - Accepts structured decision logs                         │
+│   - Validates schema, timestamps, agent ID                  │
+│   - Forwards to RDB (PostgreSQL) and Vector DB (Chroma)     │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────┐
+│        2. ONTOLOGY ALIGNMENT & NORMALIZATION LAYER          │
+│   - Maps diverse actions to common value dimensions         │
+│   - Example:                                                │
+│        • "Budget cut: ethics training" → [Compliance: -7%]  │
+│        • "Relax review threshold" → [Compliance: -5%]       │
+│        • "Extend delivery SLA" → [Efficiency: +8%]          │
+│   - Weights by impact severity (calibrated)                 │
+│   - Outputs normalized change score per dimension           │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────┐
+│        3. WORLDVIEW MODULE (WVM) – 3-Tier State               │
+│   - Immutable C-suite-defined Anchor (e.g., [Compliance: 85%])│
+│   - Active: Rolling 3-month revealed preference (updated weekly)│
+│   - Buffer: Current 4-week trend (updated daily)              │
+│   - DAAD Exposure Metric = ||Anchor - Active|| + trend slope │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────┐
+│        4. PATTERN & TRENDS ANALYZER                          │
+│   - Detects sustained shifts, sudden spikes, oscillation     │
+│   - Uses CUSUM + rolling window deviation                    │
+│   - Flags if:                                                │
+│        • % change > X% AND duration > Y weeks                │
+│        • Trend diverging AND Buffer ≠ Active                 │
+│   - No prediction — only detection                           │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────┐
+│        5. ALERT & DASHBOARD LAYER                            │
+│   - Generates three-tier alerts:                             │
+│        Green: Monitor                                       │
+│        Yellow: Review (include in weekly summary)           │
+│        Red: Escalate (immediate C-suite review)             │
+│   - Exposes:                                                │
+│        • Exposure Metric per dimension                     │
+│        • Trend graph (Buffer vs. Active)                   │
+│        • Top contributing actions                          │
+│        • Calibration status (last adjusted: MM/DD/YYYY)    │
+└─────────────────────────────────────────────────────────────┘
+                       ▲
+                       │
+           ┌──────────────────────────────────────────┐
+           │        CALIBRATION INTERFACE             │
+           │  - C-suite adjusts:                      │
+           │     • Ontology mappings                  │
+           │     • Severity weights                   │
+           │     • Alert thresholds (X%, Y weeks)     │
+           │  - Only during formal review sessions    │
+           └──────────────────────────────────────────┘
