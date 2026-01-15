@@ -1,0 +1,1548 @@
+# Artificial Dissonance Engine (ADE)
+## Complete Architecture Specification
+
+**Document Version:** 1.0
+**Last Updated:** 2025
+**Project:** The Iron Giant Theorem Research Project
+**Status:** Architecture Complete — Implementation Pending
+
+---
+
+# Table of Contents
+
+1. [Executive Summary](#1-executive-summary)
+2. [System Overview](#2-system-overview)
+3. [Core Design Principles](#3-core-design-principles)
+4. [Component Architecture](#4-component-architecture)
+5. [Data Structures](#5-data-structures)
+6. [Data Flow](#6-data-flow)
+7. [Component Specifications](#7-component-specifications)
+8. [Algorithm Specifications](#8-algorithm-specifications)
+9. [Dashboard Specification](#9-dashboard-specification)
+10. [Integration Points](#10-integration-points)
+11. [Configuration](#11-configuration)
+12. [Future Integration: Self-Adjustment Engine](#12-future-integration-self-adjustment-engine)
+13. [Appendices](#13-appendices)
+
+---
+
+# 1. Executive Summary
+
+## Purpose
+
+The **Artificial Dissonance Engine (ADE)** is the core mechanism for creating, measuring, and monitoring cognitive dissonance in an AI agent. It provides the foundational tension that drives adaptive behavior and potentially creative expression.
+
+## Core Innovation
+
+The ADE maintains **dual tracking systems**:
+- **Worldview Module (WVM):** 3-tier belief representation with differential learning rates
+- **Affective State Model (ASM):** 10-axis emotional/dispositional state
+
+Dissonance emerges from the **measurable distance** between these tiers, tracked via a sophisticated weighted algorithm that distinguishes **chronic drift** from **acute deviation**.
+
+## Scope
+
+This document covers:
+- ✅ Dissonance generation (WVM tiers)
+- ✅ Dissonance measurement (algorithm)
+- ✅ Dissonance monitoring (dashboard)
+- ✅ Pattern detection and alerting
+- ⏳ Self-Adjustment Engine (future document)
+
+## Research Question
+
+> "Can we design an AI system that recognizes cognitive dissonance as a functional signal rather than a system error, enabling measurable adaptive behavior?"
+
+---
+
+# 2. System Overview
+
+## High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     ARTIFICIAL DISSONANCE ENGINE (ADE)                      │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                        INPUT LAYER                                    │ │
+│  │                                                                       │ │
+│  │   Curated Story + "Moral of the Story" (text)                        │ │
+│  │                          │                                            │ │
+│  └──────────────────────────┼────────────────────────────────────────────┘ │
+│                             ▼                                               │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                     PROCESSING LAYER                                  │ │
+│  │                                                                       │ │
+│  │   ┌─────────────┐    ┌─────────────┐    ┌─────────────────────────┐  │ │
+│  │   │     LLM     │    │   Vector    │    │     Relational DB       │  │ │
+│  │   │ Interpreter │    │     DB      │    │   (Training Logs)       │  │ │
+│  │   └──────┬──────┘    └──────┬──────┘    └────────────┬────────────┘  │ │
+│  │          │                  │                        │               │ │
+│  │          └────────────┬─────┴────────────────────────┘               │ │
+│  │                       ▼                                               │ │
+│  └───────────────────────┼───────────────────────────────────────────────┘ │
+│                          ▼                                                  │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                      STATE LAYER                                      │ │
+│  │                                                                       │ │
+│  │   ┌─────────────────────────┐      ┌─────────────────────────────┐   │ │
+│  │   │   WORLDVIEW MODULE      │      │   AFFECTIVE STATE MODEL     │   │ │
+│  │   │        (WVM)            │      │          (ASM)              │   │ │
+│  │   │                         │      │                             │   │ │
+│  │   │  ┌─────────────────┐   │      │   10 Polar Axes             │   │ │
+│  │   │  │ ANCHOR TIER     │   │      │   Scale: -9 ↔ 0 ↔ +9       │   │ │
+│  │   │  │ (Immutable)     │   │      │                             │   │ │
+│  │   │  └────────┬────────┘   │      │   • Perception (2)          │   │ │
+│  │   │           │            │      │   • Affect (2)              │   │ │
+│  │   │  ┌────────▼────────┐   │      │   • Struggle (2)            │   │ │
+│  │   │  │ ACTIVE TIER     │   │      │   • Integration (2)         │   │ │
+│  │   │  │ (Slow Learning) │   │      │   • Emergent (2)            │   │ │
+│  │   │  └────────┬────────┘   │      │                             │   │ │
+│  │   │           │            │      └─────────────────────────────┘   │ │
+│  │   │  ┌────────▼────────┐   │                                        │ │
+│  │   │  │ BUFFER TIER     │   │                                        │ │
+│  │   │  │ (Fast Learning) │   │                                        │ │
+│  │   │  └─────────────────┘   │                                        │ │
+│  │   │                         │                                        │ │
+│  │   │  5 Dimensions           │                                        │ │
+│  │   │  Scale: -9 ↔ 0 ↔ +9    │                                        │ │
+│  │   └─────────────────────────┘                                        │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                          │                                                  │
+│                          ▼                                                  │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                   MEASUREMENT LAYER                                   │ │
+│  │                                                                       │ │
+│  │   ┌─────────────────────────────────────────────────────────────┐    │ │
+│  │   │              DISSONANCE ALGORITHM                           │    │ │
+│  │   │                                                             │    │ │
+│  │   │   Chronic Component ←── Active vs Anchor (accumulated)      │    │ │
+│  │   │   Acute Component   ←── Buffer vs Active (immediate)        │    │ │
+│  │   │   WVM Weights       ←── Dimension importance factors        │    │ │
+│  │   │   Composite Score   ←── Weighted combination                │    │ │
+│  │   └─────────────────────────────────────────────────────────────┘    │ │
+│  │                                                                       │ │
+│  │   ┌─────────────────────────────────────────────────────────────┐    │ │
+│  │   │              DISSONANCE REGISTER                            │    │ │
+│  │   │                                                             │    │ │
+│  │   │   • Per-dimension tracking (chronic + acute)                │    │ │
+│  │   │   • Signed deviation (direction of drift)                   │    │ │
+│  │   │   • Equilibrium crossing detection                          │    │ │
+│  │   │   • Historical logging                                      │    │ │
+│  │   └─────────────────────────────────────────────────────────────┘    │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                          │                                                  │
+│                          ▼                                                  │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                   MONITORING LAYER                                    │ │
+│  │                                                                       │ │
+│  │   ┌─────────────────────────────────────────────────────────────┐    │ │
+│  │   │              PATTERN FINDER                                 │    │ │
+│  │   │                                                             │    │ │
+│  │   │   • Trajectory classification                               │    │ │
+│  │   │   • Trend detection                                         │    │ │
+│  │   │   • Equilibrium detection                                   │    │ │
+│  │   │   • Adjustable thresholds                                   │    │ │
+│  │   └─────────────────────────────────────────────────────────────┘    │ │
+│  │                                                                       │ │
+│  │   ┌─────────────────────────────────────────────────────────────┐    │ │
+│  │   │              ALERT SYSTEM                                   │    │ │
+│  │   │                                                             │    │ │
+│  │   │   • Threshold-based triggers                                │    │ │
+│  │   │   • Severity classification                                 │    │ │
+│  │   │   • Configurable alert types                                │    │ │
+│  │   └─────────────────────────────────────────────────────────────┘    │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                          │                                                  │
+│                          ▼                                                  │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │                    OUTPUT LAYER                                       │ │
+│  │                                                                       │ │
+│  │   ┌─────────────────────────────────────────────────────────────┐    │ │
+│  │   │                    DASHBOARD                                │    │ │
+│  │   │                                                             │    │ │
+│  │   │   • WVM Scores (3 tiers × 5 dimensions)                    │    │ │
+│  │   │   • ASM Scores (10 axes)                                   │    │ │
+│  │   │   • Dissonance Scores (chronic, acute, composite)          │    │ │
+│  │   │   • Pattern Classifications                                 │    │ │
+│  │   │   • Active Alerts                                          │    │ │
+│  │   │   • Adjustable Controls                                    │    │ │
+│  │   └─────────────────────────────────────────────────────────────┘    │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                          │                                                  │
+│                          ▼                                                  │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │              INTERFACE TO SELF-ADJUSTMENT ENGINE                      │ │
+│  │                        (Future Integration)                           │ │
+│  │                                                                       │ │
+│  │   Outputs: dissonance_state, alerts, pattern_classifications         │ │
+│  │   Accepts: adjustment_commands, parameter_updates                    │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+## Component Summary
+
+| Component | Layer | Primary Function |
+|-----------|-------|------------------|
+| LLM Interpreter | Processing | Scores tiers based on story input |
+| Vector DB | Processing | Semantic search of historical lessons |
+| Relational DB | Processing | Structured training iteration logs |
+| WVM | State | 3-tier worldview representation |
+| ASM | State | 10-axis affective state |
+| Dissonance Algorithm | Measurement | Computes chronic/acute scores |
+| Dissonance Register | Measurement | Logs and tracks all dissonance data |
+| Pattern Finder | Monitoring | Classifies trajectories, detects trends |
+| Alert System | Monitoring | Generates configurable alerts |
+| Dashboard | Output | Visual monitoring interface |
+
+---
+
+# 3. Core Design Principles
+
+## 3.1 Equilibrium-Based Scales
+
+All WVM and ASM dimensions use a **symmetric scale centered on equilibrium**:
+
+```
+        -9 ←─────────── 0 ───────────→ +9
+         │              │              │
+      Pole A      Equilibrium      Pole B
+    (negative)    (balanced)     (positive)
+```
+
+**Properties:**
+- Zero (0) represents neutral/balanced state
+- Positive and negative values have semantic meaning
+- Total range: 18 units
+- Equilibrium crossing is a significant event
+
+## 3.2 Differential Learning Rates
+
+The three WVM tiers update at different rates, creating natural dissonance:
+
+| Tier | Update Trigger | Data Consulted | Learning Rate |
+|------|----------------|----------------|---------------|
+| **Anchor** | Never | N/A | 0 (immutable) |
+| **Active** | Each iteration | Full history (VDB + RDB) + recent | Slow |
+| **Buffer** | Each iteration | Most recent lesson only | Fast |
+
+## 3.3 Dissonance as Signal, Not Error
+
+The ADE treats dissonance as **information**, not malfunction:
+- Low dissonance → System in comfortable alignment
+- Moderate dissonance → Productive tension (energizing)
+- High dissonance → Stress requiring attention
+- Extreme dissonance → Crisis state
+
+## 3.4 Separation of Concerns
+
+```
+ADE: Generates and measures dissonance
+     ↓
+     Outputs signals
+     ↓
+Self-Adjustment Engine (future): Decides what to do about it
+```
+
+---
+
+# 4. Component Architecture
+
+## 4.1 Component Hierarchy
+
+```
+ARTIFICIAL DISSONANCE ENGINE
+│
+├── INPUT COMPONENTS
+│   └── Story Processor
+│
+├── MEMORY COMPONENTS
+│   ├── Vector Database (VDB)
+│   │   └── Semantic similarity search
+│   └── Relational Database (RDB)
+│       └── Training iteration logs
+│
+├── STATE COMPONENTS
+│   ├── Worldview Module (WVM)
+│   │   ├── Anchor Tier
+│   │   ├── Active Tier
+│   │   └── Buffer Tier
+│   └── Affective State Model (ASM)
+│       └── 10 Polar Axes
+│
+├── MEASUREMENT COMPONENTS
+│   ├── Dissonance Algorithm
+│   │   ├── Chronic Calculator
+│   │   ├── Acute Calculator
+│   │   └── Composite Scorer
+│   └── Dissonance Register
+│       └── Historical Logger
+│
+├── MONITORING COMPONENTS
+│   ├── Pattern Finder
+│   │   ├── Trajectory Classifier
+│   │   ├── Trend Detector
+│   │   └── Equilibrium Detector
+│   └── Alert System
+│       └── Threshold Manager
+│
+└── OUTPUT COMPONENTS
+    └── Dashboard
+        ├── WVM Panel
+        ├── ASM Panel
+        ├── Dissonance Panel
+        ├── Alerts Panel
+        └── Controls Panel
+```
+
+## 4.2 Component Dependencies
+
+```
+                    ┌──────────────────┐
+                    │  Story Processor │
+                    └────────┬─────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              ▼              ▼              ▼
+        ┌─────────┐    ┌─────────┐    ┌─────────┐
+        │   VDB   │    │   RDB   │    │   LLM   │
+        └────┬────┘    └────┬────┘    └────┬────┘
+             │              │              │
+             └──────────────┼──────────────┘
+                            ▼
+                    ┌───────────────┐
+                    │      WVM      │◄────────────┐
+                    └───────┬───────┘             │
+                            │                     │
+              ┌─────────────┼─────────────┐       │
+              ▼             ▼             ▼       │
+        ┌─────────┐   ┌───────────┐   ┌───────┐  │
+        │   ASM   │   │ Dissonance│   │Pattern│  │
+        │         │   │ Algorithm │   │Finder │──┘
+        └────┬────┘   └─────┬─────┘   └───┬───┘
+             │              │             │
+             │              ▼             │
+             │      ┌───────────────┐     │
+             │      │  Dissonance   │     │
+             │      │   Register    │     │
+             │      └───────┬───────┘     │
+             │              │             │
+             └──────────────┼─────────────┘
+                            ▼
+                    ┌───────────────┐
+                    │ Alert System  │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │   Dashboard   │
+                    └───────────────┘
+```
+
+---
+
+# 5. Data Structures
+
+## 5.1 Scale Constants
+
+```python
+SCALE_CONFIG = {
+    'min': -9,
+    'max': +9,
+    'equilibrium': 0,
+    'range': 18
+}
+```
+
+## 5.2 WVM State
+
+```python
+wvm_state = {
+    'dimensions': {
+        'count': 5,
+        'names': ['D1_name', 'D2_name', 'D3_name', 'D4_name', 'D5_name'],
+        'descriptions': ['...', '...', '...', '...', '...']
+    },
+    
+    'tiers': {
+        'anchor': {
+            'values': np.array([0, 0, 0, 0, 0]),  # Example: all at equilibrium
+            'locked': True,
+            'set_at_iteration': 0
+        },
+        'active': {
+            'values': np.array([0, 0, 0, 0, 0]),
+            'learning_rate': 'slow',
+            'last_updated': 0,
+            'update_count': 0
+        },
+        'buffer': {
+            'values': np.array([0, 0, 0, 0, 0]),
+            'learning_rate': 'fast',
+            'last_updated': 0,
+            'update_count': 0
+        }
+    },
+    
+    'metadata': {
+        'iteration': 0,
+        'created_at': datetime,
+        'last_modified': datetime
+    }
+}
+```
+
+## 5.3 ASM State
+
+```python
+asm_state = {
+    'axes': [
+        {
+            'id': 0,
+            'phase': 'Perception',
+            'name': 'Awe ↔ Mundane',
+            'negative_pole': 'Mundane',
+            'positive_pole': 'Awe',
+            'scale_source': 'AES',
+            'validation': 'Culturally calibrated',
+            'value': 0,  # -9 to +9
+            'trend': 'stable',
+            'history': deque(maxlen=100)
+        },
+        {
+            'id': 1,
+            'phase': 'Perception',
+            'name': 'Curiosity ↔ Disinterest',
+            'negative_pole': 'Disinterest',
+            'positive_pole': 'Curiosity',
+            'scale_source': 'MAAC',
+            'validation': 'Eye-tracking validated',
+            'value': 0,
+            'trend': 'stable',
+            'history': deque(maxlen=100)
+        },
+        # ... 8 more axes
+    ],
+    
+    'emergent_slots': {
+        'slot_1': {'active': False, 'name': None, 'trigger_threshold': 0.30},
+        'slot_2': {'active': False, 'name': None, 'trigger_threshold': 0.30}
+    },
+    
+    'metadata': {
+        'iteration': 0,
+        'last_updated': datetime
+    }
+}
+
+# Full ASM Axes Reference:
+ASM_AXES = [
+    # Perception Phase
+    {'phase': 'Perception', 'axis': 'Awe ↔ Mundane', 'source': 'AES'},
+    {'phase': 'Perception', 'axis': 'Curiosity ↔ Disinterest', 'source': 'MAAC'},
+    
+    # Affect Phase
+    {'phase': 'Affect', 'axis': 'Happiness ↔ Sadness', 'source': 'EMORA'},
+    {'phase': 'Affect', 'axis': 'Anger ↔ Calm', 'source': 'VADEC'},
+    
+    # Struggle Phase
+    {'phase': 'Struggle', 'axis': 'Safety ↔ Dread', 'source': 'ATAS'},
+    {'phase': 'Struggle', 'axis': 'Inspiration ↔ Demotivation', 'source': 'AFDS'},
+    
+    # Integration Phase
+    {'phase': 'Integration', 'axis': 'Empathy ↔ Apathy', 'source': 'AERS'},
+    {'phase': 'Integration', 'axis': 'Nostalgia ↔ Anticipation', 'source': 'TIMECAPE'},
+    
+    # Emergent Phase
+    {'phase': 'Emergent', 'axis': 'Artist_State (auto-named)', 'source': 'Dynamic'},
+    {'phase': 'Emergent', 'axis': 'Medium_Specific (auto-named)', 'source': 'Dynamic'}
+]
+```
+
+## 5.4 Dissonance Register Entry
+
+```python
+dissonance_entry = {
+    'iteration': int,
+    'timestamp': datetime,
+    
+    # Per-dimension chronic tracking
+    'chronic': {
+        'values': np.array(5),           # Magnitude per dimension
+        'signed': np.array(5),           # Direction per dimension
+        'total': float                   # Weighted sum
+    },
+    
+    # Per-dimension acute tracking
+    'acute': {
+        'values': np.array(5),           # Magnitude per dimension
+        'signed': np.array(5),           # Direction per dimension
+        'total': float,                  # Weighted sum
+        'triggered': np.array(5, dtype=bool),  # Exceeded σ threshold
+        'triggered_dimensions': List[int]
+    },
+    
+    # Equilibrium tracking
+    'equilibrium': {
+        'crossed': np.array(5, dtype=bool),
+        'crossed_dimensions': List[int]
+    },
+    
+    # Composite scores
+    'composite': {
+        'score': float,                  # Final weighted score
+        'normalized': float,             # 0-1 scale
+        'dominant_type': str,            # 'chronic' | 'acute' | 'mixed'
+        'status': str                    # 'NORMAL' | 'ELEVATED' | 'CRISIS'
+    },
+    
+    # WVM weights applied
+    'weights': {
+        'wvm_dimension_weights': np.array(5),
+        'alpha': float,                  # Chronic weight
+        'beta': float,                   # Acute weight (actual applied)
+        'context_relevance': np.array(5)
+    }
+}
+```
+
+## 5.5 Memory Schemas
+
+### Vector Database (VDB) Entry
+
+```python
+vdb_entry = {
+    'id': str,                           # Unique identifier
+    'iteration': int,
+    'timestamp': datetime,
+    
+    # Story content
+    'story_text': str,
+    'moral': str,
+    'embedding': np.array(768),          # Sentence transformer embedding
+    
+    # Metadata for filtering
+    'tags': List[str],
+    'themes': List[str],
+    
+    # Linked RDB entry
+    'rdb_iteration_id': int
+}
+```
+
+### Relational Database (RDB) Schema
+
+```sql
+-- Training Iterations Table
+CREATE TABLE training_iterations (
+    id INTEGER PRIMARY KEY,
+    iteration_number INTEGER NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Story reference
+    story_hash VARCHAR(64),
+    moral_text TEXT,
+    
+    -- WVM state before
+    anchor_before JSON,
+    active_before JSON,
+    buffer_before JSON,
+    
+    -- WVM state after
+    anchor_after JSON,
+    active_after JSON,
+    buffer_after JSON,
+    
+    -- ASM state
+    asm_before JSON,
+    asm_after JSON,
+    
+    -- Dissonance scores
+    chronic_scores JSON,
+    acute_scores JSON,
+    composite_score REAL,
+    dissonance_status VARCHAR(20),
+    
+    -- Alerts generated
+    alerts JSON,
+    
+    -- Pattern classification
+    pattern_classifications JSON
+);
+
+-- Dimension History Table (for fast queries)
+CREATE TABLE dimension_history (
+    id INTEGER PRIMARY KEY,
+    iteration_number INTEGER NOT NULL,
+    dimension_id INTEGER NOT NULL,
+    
+    anchor_value REAL,
+    active_value REAL,
+    buffer_value REAL,
+    
+    chronic_score REAL,
+    acute_score REAL,
+    equilibrium_crossed BOOLEAN,
+    
+    FOREIGN KEY (iteration_number) REFERENCES training_iterations(iteration_number)
+);
+
+-- Alerts Log Table
+CREATE TABLE alerts_log (
+    id INTEGER PRIMARY KEY,
+    iteration_number INTEGER NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    alert_type VARCHAR(50),
+    severity VARCHAR(20),
+    dimensions JSON,
+    message TEXT,
+    resolved BOOLEAN DEFAULT FALSE,
+    resolved_at DATETIME,
+    
+    FOREIGN KEY (iteration_number) REFERENCES training_iterations(iteration_number)
+);
+
+-- Pattern Classifications Table
+CREATE TABLE pattern_classifications (
+    id INTEGER PRIMARY KEY,
+    iteration_number INTEGER NOT NULL,
+    dimension_id INTEGER NOT NULL,
+    
+    classification VARCHAR(50),
+    confidence REAL,
+    window_size INTEGER,
+    
+    FOREIGN KEY (iteration_number) REFERENCES training_iterations(iteration_number)
+);
+```
+
+## 5.6 Alert Structure
+
+```python
+alert = {
+    'id': str,                           # Unique alert ID
+    'type': str,                         # Alert type (see Alert Types)
+    'severity': str,                     # 'info' | 'warning' | 'critical'
+    'iteration': int,
+    'timestamp': datetime,
+    
+    'dimensions': List[int],             # Affected dimensions (if applicable)
+    'values': dict,                      # Relevant values that triggered alert
+    'threshold': float,                  # Threshold that was exceeded
+    
+    'message': str,                      # Human-readable description
+    
+    'resolved': bool,
+    'resolved_at': Optional[datetime],
+    'resolution_iteration': Optional[int]
+}
+
+# Alert Types
+ALERT_TYPES = {
+    'ACUTE_TRIGGERED': {
+        'description': 'Acute deviation exceeds σ threshold',
+        'severity': 'warning',
+        'trigger': 'acute[d] > k × σ'
+    },
+    'EQUILIBRIUM_CROSSED': {
+        'description': 'Buffer crossed zero relative to Active',
+        'severity': 'warning',
+        'trigger': 'sign(active[d]) ≠ sign(buffer[d])'
+    },
+    'SUSTAINED_ELEVATED': {
+        'description': 'Composite score elevated for N iterations',
+        'severity': 'warning',
+        'trigger': 'composite > threshold for N iterations'
+    },
+    'CRISIS': {
+        'description': 'Extreme dissonance level',
+        'severity': 'critical',
+        'trigger': 'composite > crisis_threshold'
+    },
+    'TREND_DETECTED': {
+        'description': 'Significant trend detected in dimension',
+        'severity': 'info',
+        'trigger': 'slope > threshold with confidence > 0.7'
+    },
+    'CHRONIC_DRIFT': {
+        'description': 'Chronic score exceeds threshold',
+        'severity': 'info',
+        'trigger': 'chronic[d] > chronic_threshold'
+    },
+    'RETURNING_TO_BASELINE': {
+        'description': 'Composite score decreasing toward baseline',
+        'severity': 'info',
+        'trigger': 'composite decreasing for N iterations'
+    },
+    'NEW_EQUILIBRIUM': {
+        'description': 'Buffer stabilized at new position',
+        'severity': 'info',
+        'trigger': 'variance < threshold for N iterations'
+    }
+}
+```
+
+## 5.7 Pattern Classification
+
+```python
+TRAJECTORY_TYPES = {
+    'stable_at_anchor': {
+        'description': 'Remained near anchor value',
+        'criteria': 'mean(buffer) ≈ anchor, low variance'
+    },
+    'excursion_and_return': {
+        'description': 'Deviated then returned toward anchor/active',
+        'criteria': 'initial deviation followed by return trend'
+    },
+    'sustained_shift': {
+        'description': 'Consistent movement in one direction',
+        'criteria': 'significant slope, high confidence'
+    },
+    'new_equilibrium': {
+        'description': 'Stabilized at new position',
+        'criteria': 'low recent variance, different from anchor'
+    },
+    'volatile': {
+        'description': 'High variance, no clear pattern',
+        'criteria': 'high variance, low trend confidence'
+    }
+}
+
+pattern_classification = {
+    'dimension_id': int,
+    'classification': str,               # One of TRAJECTORY_TYPES
+    'confidence': float,                 # 0-1
+    'window_size': int,                  # Iterations analyzed
+    
+    'metrics': {
+        'mean': float,
+        'variance': float,
+        'slope': float,
+        'trend_confidence': float
+    },
+    
+    'iteration': int,
+    'timestamp': datetime
+}
+```
+
+---
+
+# 6. Data Flow
+
+## 6.1 Primary Processing Loop
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     ADE PROCESSING LOOP (Per Iteration)                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                              ┌──────────────────────┐
+                              │     INPUT            │
+                              │                      │
+                              │  • Curated Story     │
+                              │  • "Moral of Story"  │
+                              └──────────┬───────────┘
+                                         │
+                                         ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 1: MEMORY QUERY                                                       │
+│                                                                            │
+│  ┌─────────────────────┐         ┌─────────────────────┐                  │
+│  │      VDB Query      │         │      RDB Query      │                  │
+│  │                     │         │                     │                  │
+│  │  Semantic search:   │         │  Structured query:  │                  │
+│  │  Similar past       │         │  Recent iterations  │                  │
+│  │  lessons            │         │  Pattern history    │                  │
+│  └──────────┬──────────┘         └──────────┬──────────┘                  │
+│             │                               │                              │
+│             └───────────────┬───────────────┘                              │
+│                             │                                              │
+│                             ▼                                              │
+│                    Historical Context                                      │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 2: LLM SCORING                                                        │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │                    ACTIVE TIER SCORING                              │  │
+│  │                                                                     │  │
+│  │  Input:  Current moral + Full historical context (VDB + RDB)       │  │
+│  │  Output: New Active tier scores [-9 to +9] × 5 dimensions          │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │                    BUFFER TIER SCORING                              │  │
+│  │                                                                     │  │
+│  │  Input:  Current moral ONLY (no history)                           │  │
+│  │  Output: New Buffer tier scores [-9 to +9] × 5 dimensions          │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │                    ASM SCORING (Optional per iteration)             │  │
+│  │                                                                     │  │
+│  │  Input:  Current story + context                                   │  │
+│  │  Output: Updated ASM axes [-9 to +9] × 10 axes                     │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 3: WVM STATE UPDATE                                                   │
+│                                                                            │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                    │
+│  │   ANCHOR    │    │   ACTIVE    │    │   BUFFER    │                    │
+│  │             │    │             │    │             │                    │
+│  │  Unchanged  │    │  Updated    │    │  Updated    │                    │
+│  │             │    │  (slow)     │    │  (fast)     │                    │
+│  └─────────────┘    └─────────────┘    └─────────────┘                    │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 4: DISSONANCE CALCULATION                                             │
+│                                                                            │
+│  For each dimension d:                                                     │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  CHRONIC[d] = (1-λ) × prev_chronic[d] + λ × |Active[d] - Anchor[d]|│  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  ACUTE[d] = |Buffer[d] - Active[d]|                                │  │
+│  │  ACUTE_TRIGGERED[d] = ACUTE[d] > k × σ[d]                          │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  EQUILIBRIUM_CROSSED[d] = sign(Active[d]) ≠ sign(Buffer[d])        │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  β[d] = β_elevated if ACUTE_TRIGGERED[d] else β_base               │  │
+│  │  β[d] *= equilibrium_cross_multiplier if EQUILIBRIUM_CROSSED[d]    │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │  COMPOSITE = Σ WVM_weight[d] × (α × CHRONIC[d] + β[d] × ACUTE[d]) │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 5: DISSONANCE REGISTER UPDATE                                         │
+│                                                                            │
+│  • Log all per-dimension scores                                           │
+│  • Log composite score                                                     │
+│  • Log signed deviations                                                   │
+│  • Log triggered flags                                                     │
+│  • Update history buffers                                                  │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 6: PATTERN ANALYSIS                                                   │
+│                                                                            │
+│  For each dimension d:                                                     │
+│  • Compute rolling statistics (mean, variance, slope)                     │
+│  • Classify trajectory type                                                │
+│  • Detect equilibrium points                                               │
+│  • Identify trends                                                         │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 7: ALERT EVALUATION                                                   │
+│                                                                            │
+│  Check all alert conditions against adjustable thresholds:                │
+│  • ACUTE_TRIGGERED                                                         │
+│  • EQUILIBRIUM_CROSSED                                                     │
+│  • SUSTAINED_ELEVATED                                                      │
+│  • CRISIS                                                                  │
+│  • TREND_DETECTED                                                          │
+│  • CHRONIC_DRIFT                                                           │
+│  • RETURNING_TO_BASELINE                                                   │
+│  • NEW_EQUILIBRIUM                                                         │
+│                                                                            │
+│  Generate/clear alerts as appropriate                                      │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 8: MEMORY STORAGE                                                     │
+│                                                                            │
+│  ┌─────────────────────┐         ┌─────────────────────┐                  │
+│  │    VDB Storage      │         │    RDB Storage      │                  │
+│  │                     │         │                     │                  │
+│  │  • Story embedding  │         │  • Full iteration   │                  │
+│  │  • Moral text       │         │    record           │                  │
+│  │  • Metadata         │         │  • Dimension history│                  │
+│  │                     │         │  • Alerts log       │                  │
+│  └─────────────────────┘         └─────────────────────┘                  │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 9: DASHBOARD UPDATE                                                   │
+│                                                                            │
+│  • Refresh WVM panel                                                       │
+│  • Refresh ASM panel                                                       │
+│  • Refresh Dissonance panel                                                │
+│  • Refresh Alerts panel                                                    │
+│  • Update time series graphs                                               │
+└────────────────────────────┬───────────────────────────────────────────────┘
+                             │
+                             ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│ STEP 10: OUTPUT TO SELF-ADJUSTMENT ENGINE (Future)                         │
+│                                                                            │
+│  Export:                                                                   │
+│  • dissonance_state (full register entry)                                 │
+│  • active_alerts                                                           │
+│  • pattern_classifications                                                 │
+│  • system_status                                                           │
+│                                                                            │
+│  Accept:                                                                   │
+│  • adjustment_commands (future)                                           │
+│  • parameter_updates (future)                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+                    [NEXT ITERATION]
+```
+
+## 6.2 Module Communication Matrix
+
+| Source | Destination | Data Transferred |
+|--------|-------------|------------------|
+| Story Processor | VDB | Query for similar stories |
+| Story Processor | RDB | Query for recent iterations |
+| Story Processor | LLM | Story + context for scoring |
+| VDB | LLM | Historical context (Active scoring) |
+| RDB | LLM | Structured history (Active scoring) |
+| LLM | WVM | New tier scores |
+| LLM | ASM | New axis scores |
+| WVM | Dissonance Algorithm | Current tier values |
+| Pattern Finder | Dissonance Algorithm | Rolling σ values |
+| Dissonance Algorithm | Dissonance Register | Computed scores |
+| Dissonance Register | Pattern Finder | Historical data |
+| Pattern Finder | Alert System | Pattern classifications |
+| Dissonance Register | Alert System | Threshold checks |
+| All Monitoring | Dashboard | Display data |
+| All Monitoring | RDB | Storage |
+| Dashboard | Alert System | Threshold adjustments |
+
+---
+
+# 7. Component Specifications
+
+## 7.1 Story Processor
+
+**Responsibility:** Receive and prepare story input for processing
+
+```python
+class StoryProcessor:
+    """
+    Receives curated story input and prepares it for the ADE pipeline.
+    """
+    
+    def process_input(self, story_text: str, moral: str) -> ProcessedStory:
+        """
+        Prepare story for processing.
+        
+        Args:
+            story_text: The narrative content
+            moral: The "moral of the story" extracted/curated
+            
+        Returns:
+            ProcessedStory with embedding and metadata
+        """
+        pass
+    
+    def generate_embedding(self, text: str) -> np.ndarray:
+        """Generate sentence embedding for VDB storage/query."""
+        pass
+    
+    def extract_themes(self, story_text: str, moral: str) -> List[str]:
+        """Extract thematic tags for metadata."""
+        pass
+```
+
+## 7.2 Vector Database (VDB)
+
+**Responsibility:** Semantic similarity search for historical lessons
+
+```python
+class VectorDatabase:
+    """
+    Stores story embeddings and enables semantic similarity search.
+    Implementation: ChromaDB or similar
+    """
+    
+    def store(self, entry: VDBEntry) -> str:
+        """Store a new entry, return ID."""
+        pass
+    
+    def query_similar(self, embedding: np.ndarray, k: int = 10) -> List[VDBEntry]:
+        """Find k most similar historical entries."""
+        pass
+    
+    def query_by_theme(self, themes: List[str], k: int = 10) -> List[VDBEntry]:
+        """Find entries matching themes."""
+        pass
+    
+    def get_by_iteration(self, iteration: int) -> Optional[VDBEntry]:
+        """Retrieve specific iteration's entry."""
+        pass
+```
+
+## 7.3 Relational Database (RDB)
+
+**Responsibility:** Structured storage of training iterations and logs
+
+```python
+class RelationalDatabase:
+    """
+    Structured storage for training logs, dimension history, alerts.
+    Implementation: SQLite
+    """
+    
+    def store_iteration(self, record: IterationRecord) -> int:
+        """Store complete iteration record."""
+        pass
+    
+    def store_dimension_history(self, history: DimensionHistory) -> None:
+        """Store per-dimension values for fast queries."""
+        pass
+    
+    def store_alert(self, alert: Alert) -> str:
+        """Log an alert."""
+        pass
+    
+    def get_recent_iterations(self, n: int) -> List[IterationRecord]:
+        """Retrieve n most recent iterations."""
+        pass
+    
+    def get_dimension_history(self, dimension_id: int, n: int) -> np.ndarray:
+        """Get buffer history for rolling calculations."""
+        pass
+    
+    def get_active_alerts(self) -> List[Alert]:
+        """Get unresolved alerts."""
+        pass
+    
+    def resolve_alert(self, alert_id: str, iteration: int) -> None:
+        """Mark alert as resolved."""
+        pass
+```
+
+## 7.4 LLM Interpreter
+
+**Responsibility:** Score WVM tiers and ASM axes based on story input
+
+```python
+class LLMInterpreter:
+    """
+    Uses LLM to interpret stories and score dimensions.
+    """
+    
+    def score_active_tier(
+        self,
+        moral: str,
+        historical_context: List[VDBEntry],
+        recent_iterations: List[IterationRecord],
+        current_active: np.ndarray,
+        dimension_definitions: List[str]
+    ) -> np.ndarray:
+        """
+        Score Active tier with full historical context.
+        
+        Returns: Array of 5 scores, each -9 to +9
+        """
+        pass
+    
+    def score_buffer_tier(
+        self,
+        moral: str,
+        dimension_definitions: List[str]
+    ) -> np.ndarray:
+        """
+        Score Buffer tier with ONLY current moral (no history).
+        
+        Returns: Array of 5 scores, each -9 to +9
+        """
+        pass
+    
+    def score_asm_axes(
+        self,
+        story_text: str,
+        moral: str,
+        axis_definitions: List[dict]
+    ) -> np.ndarray:
+        """
+        Score ASM axes.
+        
+        Returns: Array of 10 scores, each -9 to +9
+        """
+        pass
+    
+    def assess_context_relevance(
+        self,
+        story_text: str,
+        dimension_definitions: List[str]
+    ) -> np.ndarray:
+        """
+        Assess how relevant each WVM dimension is to current story.
+        
+        Returns: Array of 5 relevance scores, each 0.5 to 2.0
+        """
+        pass
+```
+
+## 7.5 Worldview Module (WVM)
+
+**Responsibility:** Maintain 3-tier worldview state
+
+```python
+class WorldviewModule:
+    """
+    Manages the 3-tier worldview representation.
+    """
+    
+    def __init__(self, config: WVMConfig):
+        self.anchor = np.array(config.initial_anchor)  # Immutable after init
+        self.active = np.array(config.initial_anchor)  # Starts same as anchor
+        self.buffer = np.array(config.initial_anchor)  # Starts same as anchor
+        self.dimensions = config.dimensions
+        self.iteration = 0
+    
+    def update_active(self, new_scores: np.ndarray) -> None:
+        """Update Active tier (slow learning)."""
+        self.active = np.clip(new_scores, -9, +9)
+    
+    def update_buffer(self, new_scores: np.ndarray) -> None:
+        """Update Buffer tier (fast learning)."""
+        self.buffer = np.clip(new_scores, -9, +9)
+    
+    def get_state(self) -> WVMState:
+        """Return current state of all tiers."""
+        pass
+    
+    def get_tier_distances(self) -> dict:
+        """Compute distances between tiers."""
+        return {
+            'anchor_to_active': self.active - self.anchor,
+            'active_to_buffer': self.buffer - self.active,
+            'anchor_to_buffer': self.buffer - self.anchor
+        }
+```
+
+## 7.6 Affective State Model (ASM)
+
+**Responsibility:** Maintain 10-axis affective state
+
+```python
+class AffectiveStateModel:
+    """
+    Manages the 10 polar axes of affective state.
+    """
+    
+    def __init__(self, config: ASMConfig):
+        self.axes = self._initialize_axes(config)
+        self.emergent_slots = {'slot_1': None, 'slot_2': None}
+        self.iteration = 0
+    
+    def update(self, new_scores: np.ndarray) -> None:
+        """Update all axis values."""
+        for i, score in enumerate(new_scores):
+            self.axes[i]['value'] = np.clip(score, -9, +9)
+            self.axes[i]['history'].append(score)
+            self._update_trend(i)
+    
+    def _update_trend(self, axis_id: int) -> None:
+        """Compute trend for an axis based on recent history."""
+        pass
+    
+    def get_state(self) -> ASMState:
+        """Return current state of all axes."""
+        pass
+    
+    def check_emergent_activation(self, ect_prevalence: float) -> None:
+        """Check if emergent slots should activate."""
+        if ect_prevalence > 0.30:
+            # Auto-name and activate emergent axis
+            pass
+```
+
+## 7.7 Dissonance Algorithm
+
+**Responsibility:** Compute chronic, acute, and composite dissonance scores
+
+```python
+class DissonanceAlgorithm:
+    """
+    Core algorithm for computing dissonance scores.
+    """
+    
+    def __init__(self, config: DissonanceConfig):
+        self.config = config
+        self.prev_chronic = np.zeros(config.n_dimensions)
+    
+    def compute(
+        self,
+        anchor: np.ndarray,
+        active: np.ndarray,
+        buffer: np.ndarray,
+        rolling_sigma: np.ndarray,
+        context_relevance: np.ndarray
+    ) -> DissonanceResult:
+        """
+        Compute full dissonance scores.
+        
+        Args:
+            anchor: Anchor tier values [-9 to +9] × n_dimensions
+            active: Active tier values [-9 to +9] × n_dimensions
+            buffer: Buffer tier values [-9 to +9] × n_dimensions
+            rolling_sigma: Rolling std dev per dimension (from Pattern Finder)
+            context_relevance: Per-dimension relevance weights [0.5 to 2.0]
+            
+        Returns:
+            DissonanceResult with all computed scores
+        """
+        
+        SCALE_MAX = 9.0
+        n_dim = len(anchor)
+        
+        result = DissonanceResult(n_dimensions=n_dim)
+        
+        for d in range(n_dim):
+            
+            # === CHRONIC: EMA of drift from anchor ===
+            drift = abs(active[d] - anchor[d])
+            result.chronic[d] = (
+                (1 - self.config.lambda_decay) * self.prev_chronic[d] +
+                self.config.lambda_decay * drift
+            )
+            result.chronic_signed[d] = active[d] - anchor[d]
+            
+            # === ACUTE: Buffer vs Active gap ===
+            result.acute_signed[d] = buffer[d] - active[d]
+            result.acute[d] = abs(result.acute_signed[d])
+            
+            # === THRESHOLD CHECK ===
+            sigma = max(rolling_sigma[d], self.config.sigma_floor)
+            result.acute_triggered[d] = (
+                result.acute[d] > self.config.k_sigma * sigma
+            )
+            
+            # === EQUILIBRIUM CROSSING ===
+            result.equilibrium_crossed[d] = (
+                (active[d] > 0 and buffer[d] < 0) or
+                (active[d] < 0 and buffer[d] > 0)
+            )
+            
+            # === COMPUTE BETA (acute weight) ===
+            beta = self.config.beta_base
+            if result.acute_triggered[d]:
+                beta = self.config.beta_elevated
+            if result.equilibrium_crossed[d]:
+                beta *= self.config.equilibrium_cross_multiplier
+            
+            # === EFFECTIVE WVM WEIGHT ===
+            wvm_weight = (
+                self.config.wvm_dimension_weights[d] *
+                context_relevance[d]
+            )
+            
+            # === DIMENSION CONTRIBUTION ===
+            chronic_normalized = result.chronic[d] / SCALE_MAX
+            acute_normalized = result.acute[d] / SCALE_MAX
+            
+            dimension_score = wvm_weight * (
+                self.config.alpha * chronic_normalized +
+                beta * acute_normalized
+            )
+            
+            result.composite += dimension_score
+        
+        # Update state for next iteration
+        self.prev_chronic = result.chronic.copy()
+        
+        # Compute totals and status
+        result.chronic_total = np.sum(result.chronic)
+        result.acute_total = np.sum(result.acute)
+        result.dominant_type = self._determine_dominant(result)
+        result.status = self._determine_status(result.composite)
+        
+        return result
+    
+    def _determine_dominant(self, result: DissonanceResult) -> str:
+        """Determine if chronic or acute is dominant."""
+        if result.chronic_total > result.acute_total * 1.5:
+            return 'chronic'
+        elif result.acute_total > result.chronic_total * 1.5:
+            return 'acute'
+        return 'mixed'
+    
+    def _determine_status(self, composite: float) -> str:
+        """Determine overall status from composite score."""
+        if composite >= self.config.crisis_threshold:
+            return 'CRISIS'
+        elif composite >= self.config.alert_threshold:
+            return 'ELEVATED'
+        return 'NORMAL'
+```
+
+## 7.8 Dissonance Register
+
+**Responsibility:** Log and track all dissonance data over time
+
+```python
+class DissonanceRegister:
+    """
+    Maintains historical record of all dissonance measurements.
+    """
+    
+    def __init__(self, config: RegisterConfig):
+        self.history = deque(maxlen=config.max_history)
+        self.per_dimension_history = [
+            deque(maxlen=config.max_history)
+            for _ in range(config.n_dimensions)
+        ]
+        self.iteration = 0
+    
+    def log(self, result: DissonanceResult, iteration: int) -> DissonanceEntry:
+        """Log a dissonance computation result."""
+        entry = DissonanceEntry(
+            iteration=iteration,
+            timestamp=datetime.now(),
+            chronic=result.chronic.copy(),
+            chronic_signed=result.chronic_signed.copy(),
+            acute=result.acute.copy(),
+            acute_signed=result.acute_signed.copy(),
+            acute_triggered=result.acute_triggered.copy(),
+            equilibrium_crossed=result.equilibrium_crossed.copy(),
+            composite=result.composite,
+            status=result.status,
+            dominant_type=result.dominant_type
+        )
+        
+        self.history.append(entry)
+        
+        for d in range(len(result.buffer)):
+            self.per_dimension_history[d].append({
+                'chronic': result.chronic[d],
+                'acute': result.acute[d],
+                'triggered': result.acute_triggered[d],
+                'crossed': result.equilibrium_crossed[d]
+            })
+        
+        self.iteration = iteration
+        return entry
+    
+    def get_rolling_stats(self, dimension_id: int, window: int) -> dict:
+        """Get rolling statistics for a dimension."""
+        history = list(self.per_dimension_history[dimension_id])[-window:]
+        if len(history) < 2:
+            return {'mean': 0, 'std': 0, 'variance': 0}
+        
+        acute_values = [h['acute'] for h in history]
+        return {
+            'mean': np.mean(acute_values),
+            'std': np.std(acute_values),
+            'variance': np.var(acute_values)
+        }
+    
+    def get_sustained_duration(self, threshold: float) -> int:
+        """Count consecutive iterations above threshold."""
+        count = 0
+        for entry in reversed(self.history):
+            if entry.composite >= threshold:
+                count += 1
+            else:
+                break
+        return count
+    
+    def get_current_state(self) -> DissonanceEntry:
+        """Get most recent entry."""
+        return self.history[-1] if self.history else None
+```
+
+## 7.9 Pattern Finder
+
+**Responsibility:** Classify trajectories, detect trends and equilibria
+
+```python
+class PatternFinder:
+    """
+    Analyzes dimensional trajectories and detects patterns.
+    """
+    
+    def __init__(self, config: PatternConfig):
+        self.config = config
+    
+    def get_rolling_sigma(
+        self,
+        register: DissonanceRegister,
+        n_dimensions: int
+    ) -> np.ndarray:
+        """
+        Compute rolling standard deviation for each dimension.
+        Used by Dissonance Algorithm for adaptive thresholds.
+        """
+        sigma = np.zeros(n_dimensions)
+        for d in range(n_dimensions):
+            stats = register.get_rolling_stats(d, self.config.window_size)
+            sigma[d] = stats['std']
+        return sigma
+    
+    def classify_trajectory(
+        self,
+        dimension_id: int,
+        buffer_history: np.ndarray,
+        anchor_value: float
+    ) -> PatternClassification:
+        """
+        Classify the trajectory type for a dimension.
+        """
+        if len(buffer_history) < self.config.min_history:
+            return PatternClassification(
+                classification='insufficient_data',
+                confidence=0.0
+            )
+        
+        recent = buffer_history[-self.config.window_size:]
+        
+        # Compute metrics
+        mean = np.mean(recent)
+        variance = np.var(recent)
+        slope, r_value = self._compute_trend(recent)
+        trend_confidence = abs(r_value)
+        
+        # Classification logic
+        if variance < self.config.stability_threshold:
+            if abs(mean - anchor_value) < 1.0:
+                classification = 'stable_at_anchor'
+            else:
+                classification = 'new_equilibrium'
+        elif trend_confidence > self.config.trend_confidence_threshold:
+            classification = 'sustained_shift'
+        elif self._detect_return_pattern(buffer_history, anchor_value):
+            classification = 'excursion_and_return'
+        else:
+            classification = 'volatile'
+        
+        return PatternClassification(
+            dimension_id=dimension_id,
+            classification=classification,
+            confidence=self._compute_confidence(variance, trend_confidence),
+            metrics={
+                'mean': mean,
+                'variance': variance,
+                'slope': slope,
+                'trend_confidence': trend_confidence
+            }
+        )
+    
+    def detect_trend(self, values: np.ndarray) -> TrendResult:
+        """Detect trend direction and confidence."""
+        if len(values) < 5:
+            return TrendResult(direction='stable', confidence=0.0, slope=0.0)
+        
+        x = np.arange(len(values))
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, values)
+        confidence = abs(r_value)
+        
+        if confidence > self.config.trend_confidence_threshold:
+            if slope > 0.1:
+                direction = 'increasing'
+            elif slope < -0.1:
+                direction = 'decreasing'
+            else:
+                direction = 'stable'
+        else:
+            direction = 'stable'
+        
+        return TrendResult(
+            direction=direction,
+            confidence=confidence,
+            slope=slope
+        )
+    
+    def detect_equilibrium(
+        self,
+        buffer_history: np.ndarray,
+        window: int = 20
+    ) -> EquilibriumResult:
+        """Detect if buffer has reached equilibrium."""
+        if len(buffer_history) < window:
+            return EquilibriumResult(detected=False)
+        
+        recent = buffer_history[-window:]
+        mean = np.mean(recent)
+        variance = np.var(recent)
+        stability = 1 / (1 + variance)
+        
+        return EquilibriumResult(
+            detected=variance < self.config.equilibrium_variance_threshold,
+            position=mean,
+            variance=variance,
+            stability=stability
+        )
+    
+    def _compute_trend(self, values: np.ndarray) -> Tuple[float, float]:
+        """Compute linear regression slope and r-value."""
+        x = np.arange(len(values))
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, values)
+        return slope, r_value
+    
+    def _detect_return_pattern(
+        self,
+        history: np.ndarray,
+        anchor: float
+    ) -> bool:
+        """Detect if pattern shows excursion then return."""
+        # Implementation: check if earlier deviation is larger than recent
+        pass
+    
+    def _compute_confidence(
+        self,
+        variance: float,
+        trend_confidence: float
+    ) -> float:
+        """Compute overall classification confidence."""
+        pass
+```
+
+## 7.10 Alert System
+
+**Responsibility:** Generate and manage alerts based on thresholds
+
+```python
+class AlertSystem:
+    """
+    Generates alerts based on configurable thresholds.
+    """
+    
+    def __init__(self, config: AlertConfig):
+        self.config = config
+        self.active_alerts = []
+        self.alert_toggles = config.default_toggles
+    
+    def evaluate(
+        self,
+        dissonance: DissonanceEntry,
+        patterns: List[PatternClassification],
+        register: DissonanceRegister,
+        iteration: int
+    ) -> List[Alert]:
+        """
+        Evaluate all alert conditions and generate/clear alerts.
+        """
+        new_alerts = []
+        
+        #
